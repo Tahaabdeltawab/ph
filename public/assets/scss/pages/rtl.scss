@@ -1,0 +1,120 @@
+.rtl{
+    direction: rtl;
+    text-align: right;
+    ul{
+        padding-right: 0;
+    }
+    .ml-auto{
+        margin-right: auto !important;
+        margin-left: unset !important;
+    }
+    .text-right{
+        text-align: left !important;
+    }
+    .float-right{
+        float:  left !important;
+    }
+    .float-left{
+        float: right !important;
+    }
+    .modal-footer>:not(:last-child){
+        margin-left: .25rem;
+    }
+    .m-r-15{
+        margin-left: 15px;
+        margin-right: 0;
+    }
+
+    .input-group>.custom-select:not(:last-child),
+    .input-group>.form-control:not(:last-child){
+        border-top-right-radius: .25rem;
+        border-bottom-right-radius: .25rem;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+    .input-group>.custom-select:not(:first-child),
+    .input-group>.form-control:not(:first-child){
+        border-radius: .25rem 0 0 .25rem;
+    }
+    .input-group>.input-group-prepend>.input-group-text{
+        border-radius: 0 .25rem .25rem 0;
+    }
+
+    .btn-group>.btn-group:not(:first-child)>.btn,
+    .btn-group>.btn:not(:first-child){
+        border-radius: 0;
+    }
+    .btn-group>.btn-group:not(:last-child)>.btn,
+    .btn-group>.btn:not(:last-child):not(.dropdown-toggle){
+        border-radius: 0;
+    }
+
+    .input-group>.input-group-append>.input-group-text{
+        border-radius: .25rem 0 0 .25rem;
+    }
+    .input-group-append{
+        margin-right: -1px;
+    }
+
+    .file_manager .file .file-name small .date,
+    .list-widget .badge{
+        float: left;
+    }    
+
+    // Nestable SCSS
+    .dd3-handle{
+        left: auto;
+        right: 0;
+
+        &::before{
+            left: auto;
+            right: 0;
+        }
+    }
+    .dd3-content{
+        @extend .p-r-40;
+        @extend .p-l-10;
+    }
+
+    .dd3-item {
+        > button{
+            @extend .m-r-35;
+            @extend .m-l-0;
+            float: right;
+        }
+    }
+    .dd-list {
+        .dd-list{
+            @extend .p-r-30;
+            @extend .p-l-0;
+        }
+    }
+
+    // Range Slider
+    .full .rs-bar,
+    .half.left .rs-bar,
+    .half.right .rs-bar{
+        left: 0;
+    }
+    .rs-handle{
+        float: left;
+    }
+
+    // TreeView
+    .treeview {
+        span.icon{
+            @extend .m-r-0;
+            @extend .m-l-5;
+        }
+    }
+
+    // jQuery DataTable
+    div.dataTables_wrapper {
+        div.dataTables_filter {
+            input{
+                margin-left: 0;
+                margin-right: 0.5em;
+            }
+        }
+    }
+}
