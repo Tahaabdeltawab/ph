@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator,Auth,Artisan,Hash,File,Crypt;
 use App\Models\Notification;
+use App\Models\user_notification;
 define( 'API_ACCESS_KEY12', 'AAAAwMhS47g:APA91bGqo5zYMAsffvkHMsCVUwpo9-OwCh6NkWgky4UVZUTKe34vAZYFT1QxTcq5jLtnJtGpDkKwtoU1abgW8OlR_32C17XBj4F4tkonjDvijhyUasgOaFhhLXN93tK2zDLbXngGAZfo');
 
 class BaseController extends Controller
@@ -44,7 +45,7 @@ class BaseController extends Controller
     }
 
 
-    public static function send_notification($firebase_token , $title, $body,$image ,$user_id){
+       public static function send_notification($firebase_token , $title, $body, $notification_id ,$user_id){
         
 
                                  
@@ -78,13 +79,12 @@ class BaseController extends Controller
         		curl_close( $ch );
                
 
-            $add =  new Notification;
-            $add->title_ar = $title;
-            $add->body_ar = $body;
-            $add->image = $image;
+            $add =  new user_notification;
+            $add->notification_id = $notification_id;
             $add->user_id = $user_id;
             $add->save();
     }
+
 
 
 }

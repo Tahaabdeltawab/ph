@@ -1,56 +1,74 @@
 <?php
-
 namespace App\Models;
 
-use App\Notifications\ResetPassword;
-use App\Notifications\VerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Hash;
+use Mail;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
-{
-    use Notifiable,
-        HasFactory;
+
+class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
+    use Notifiable;
+
+    protected $fillable = ['username', 'phone', 'email', 'password', 'remember_token', 'role_id'];
+
+    public static function boot()
+    {
+        parent::boot();
+
+        User::observe(new \App\Observers\UserActionsObserver);
+    }
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
+     * Hash password
+     * @param $input
      */
-    protected $fillable = [
-        'username',
-        'email',
-        'phone',
-        'status',
-        'password',
-        'city_id',
-        'area_id',
-        'role',
-    ];
+    public function setPasswordAttribute($input)
+    {
+        if ($input) {
+            $this->attributes['password'] = app('hash')->needsRehash($input) ? Hash::make($input) : $input;
+        }
+    }
 
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
+     * Set to null if empty
+     * @param $input
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public function setRoleIdAttribute($input)
+    {
+        $this->attributes['role_id'] = $input ? $input : null;
+    }
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 
+    public function isAdmin()
+    {
+        foreach ($this->role()->get() as $role) {
+            if ($role->id == 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    
     /**
      * The accessors to append to the model's array form.
      *
@@ -128,31 +146,11 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
             'password' => 'required|confirmed|min:6'
         ];
     }
-
-    public function checkRole($role){
-        return $this->role == $role;
-    }
-    public function isAdmin(){
-        return $this->role == 1;
-    }
-    public function isUser(){
-        return $this->role == 2;
-    }
-    public function isSupervisor(){
-        return $this->role == 3;
-    }
-    public function scopeAdmin($q){
-        return $q->where('role', 1);
-    }
-    public function scopeUser($q){
-        return $q->where('role', 2);
-    }
-    public function scopeSupervisor($q){
-        return $q->where('role', 3);
+    
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class, 'user_notifications');
     }
 
-    public function places(){
-        return $this->hasMany(Place::class, 'supervisor_id');
-    }
 
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -18,14 +18,12 @@ use \App\Models\Area;
 use \App\Models\Setting;
 use App\Http\Resources\UserResource;
 
-class AuthController extends Controller
+class AuthController extends APIBaseController
 {
     use ApiResponseTrait;
 
     public function registration (Request $request){
         
-        $created_at = carbon::now()->toDateTimeString();
-        $dateTime = date('Y-m-d H:i:s',strtotime('+2 hours',strtotime($created_at)));
 
         $lang = $request->header('lang');
         $input = $request->all();
@@ -36,6 +34,7 @@ class AuthController extends Controller
             'phone.unique' => $lang == 'ar' ? 'رقم الهاتف موجود لدينا بالفعل' :"phone is already teken" ,
             'phone.min' => $lang == 'ar' ?  'رقم الهاتف يجب ان لا يقل عن 7 ارقام' :"The phone must be at least 7 numbers" ,
             'phone.numeric' => $lang == 'ar' ?  ' الهاتف يجب ان يكون رقما' :"The phone must be a number" ,
+            'phone.regex' => $lang == 'ar' ?  ' يجب أن يبدأ الهاتف ب صفر' :"The phone must start with 0" ,
             'password.min' => $lang == 'ar' ?  'كلمة السر يجب ان لا تقل عن 6 احرف' :"The password must be at least 6 character" ,       
             // 'email.required' => $lang == 'ar' ? 'من فضلك ادخل البريد الالكتروني' :"email is required"  ,
             'email.unique' => $lang == 'ar' ? 'هذا البريد الالكتروني موجود لدينا بالفعل' :"email is already token" ,
@@ -43,7 +42,7 @@ class AuthController extends Controller
         ];
         $validator = Validator::make($input, [
             // 'username' => 'required|unique:users',
-            'phone' => 'unique:users|numeric|min:7|regex:/(0)[0-9]{9}/',
+            'phone' => 'unique:users|numeric|min:7',/* |regex:/(0)[0-9]{9}/ */
             'password' => 'required|confirmed|min:6',
             //'city_id' => 'required',
             //'area_id' => 'required',
@@ -52,46 +51,34 @@ class AuthController extends Controller
         ], $validationMessages);
 
         if ($validator->fails()) {
-            return $this->apiResponseMessage(1,$validator->messages()->first(), 200);
+            return $this->sendError($validator->messages()->first());
         }
-
-        $city= City::first();
-        $area=Area::where('city_id',$city->id)->first();
         
         $add = new User;
         $add->username = $request->username;
         $add->email = $request->email;
         $add->phone = $request->phone;
         $add->password = bcrypt($request->password);
-        $add->city_id  = $city->id;
-        $add->area_id  = $area->id; 
-        $add->created_at = $dateTime;
-        $add->updated_at = $dateTime;
+
         $add->save();
 
         $token = JWTAuth::fromUser($add);
 
-        $add_setting = new Setting;
-        $add_setting->language = "en";
-        $add_setting->notification = "on";
-        $add_setting->user_id = $add->id;
-        $add_setting->save();
-    
         $user = User::where('id' , $add->id)->first();
         $user['userToken'] = $token;
         $user['lang'] = $lang;
-        return $this->apiResponseData(  UserResource::make($user) , "user data");
+        return $this->sendResponse(UserResource::make($user) , "user data");
     }
 
     public function app_login (Request $request){
 
         $lang = $request->header('lang');
-        $user = User::where([['phone',$request->phone] , ['role' , 2]])
-                    ->orwhere([['email' , $request->phone] , ['role' , 2]])->first();
+        $user = User::where([['phone',$request->phone] ])
+                    ->orwhere([['email' , $request->phone] ])->first();
         if(is_null($user))
         {
             $msg = $lang=='ar' ?  'البيانات المدخلة غير موجودة لدينا ':'user not exist' ;
-            return $this->apiResponseMessage( 1,$msg, 200);
+            return $this->sendError($msg);
         }
         $password = Hash::check($request->password,$user->password);
         if($password==true){
@@ -102,14 +89,15 @@ class AuthController extends Controller
             $user->save();
             $token = JWTAuth::fromUser($user);
             $user['userToken'] = $token;
+            $user['lang'] = $lang;
 
 
             $msg = $lang=='ar' ? 'تم تسجيل الدخول بنجاح':'Welcome, you are login successfull' ;
 
-            return response()->json([ 'error'=> 0,'message'=> $msg, 'data'=> UserResource::make($user)]);
+            return $this->sendSuccess($msg, 200, UserResource::make($user));
         }
         $msg = $lang=='ar' ?  'كلمة السر غير صحيحة' : 'Password is not correct' ;
-        return $this->apiResponseMessage( 1,$msg, 200);
+        return $this->sendError($msg);
     }
 
 
@@ -122,18 +110,18 @@ class AuthController extends Controller
                
                 $data = User::where('id' , $request->user_id)->first();
                 $data['lang'] = $lang;
-                return $this->apiResponseData(  UserResource::make($data) , "user data");
+                return $this->sendResponse(  UserResource::make($data) , "user data");
     
             }
 
             $data = User::where('id' , auth()->User()->id)->first();
             $data['lang'] = $lang;
-            return $this->apiResponseData(  UserResource::make($data) , "user data");
+            return $this->sendResponse(  UserResource::make($data) , "user data");
 
         }else{
             $msg = $lang == 'ar' ? " من فضلك سجل دخول" : "Token is not provided";
 
-            return $this->apiResponseMessage( 3, $msg);
+            return $this->sendError($msg);
         }
         
     }
@@ -152,11 +140,11 @@ class AuthController extends Controller
         ], $validationMessages);
 
         if ($validator->fails()) {
-            return $this->apiResponseMessage(1,$validator->messages()->first(), 200);
+            return $this->sendError($validator->messages()->first());
         }
         $updatepass = User::where('phone' , $request->phone)->update(['password' =>  bcrypt($request->password)]);
         $msg = $lang == 'ar' ? "تم تعديل كلمه السر بنجاح" : "PAssword is changed successfuly";
-        return $this->apiResponseMessage( 0, $msg);
+        return $this->sendSuccess($msg);
 
     }
     
@@ -184,13 +172,13 @@ class AuthController extends Controller
 
             $msg = $lang == 'ar' ? " تم تغير بياناتك بنجاح" : "profile is updated";
 
-            return $this->apiResponseData(  UserResource::make(User::where('id' , auth()->User()->id)->first()) , $msg);
+            return $this->sendResponse(UserResource::make(User::where('id' , auth()->User()->id)->first()) , $msg);
                                                             
                                                                         
         }else{
             $msg = $lang == 'ar' ? " من فضلك سجل دخول" : "Token is not provided";
 
-            return $this->apiResponseMessage( 3, $msg);
+            return $this->sendError($msg);
         }
     }
     
@@ -216,14 +204,14 @@ class AuthController extends Controller
             $msg = $lang == 'ar' ? " تم تغير مكانك بنجاح" : "Location is updated";
             
             if($request->header('src') == 'web')
-            return $this->apiResponseData(  UserResource::make(User::where('id' , auth()->User()->id)->first()) , $msg);
-            return $this->apiResponseMessage( 0, $msg);
+            return $this->sendResponse(UserResource::make(User::where('id' , auth()->User()->id)->first()) , $msg);
+            return $this->sendSuccess($msg);
                                                             
                                                                         
         }else{
             $msg = $lang == 'ar' ? " من فضلك سجل دخول" : "Token is not provided";
 
-            return $this->apiResponseMessage( 3, $msg);
+            return $this->sendError($msg);
         }
     }
 
@@ -238,13 +226,13 @@ class AuthController extends Controller
             auth()->logout() ;
             $msg = $lang == 'ar' ? " تم تسجيل الخروج بنجاح" : "Logout successfully";
 
-            return $this->apiResponseMessage( 0, $msg);
+            return $this->sendSuccess($msg);
 
         }else{
 
              $msg = $lang == 'ar' ? " من فضلك سجل دخول" : "Token is not provided";
 
-            return $this->apiResponseMessage( 3, $msg);
+            return $this->sendError($msg);
         }
     }
     
@@ -262,7 +250,7 @@ class AuthController extends Controller
 
          if( $phone == NULL){
             $msg = $lang=='ar' ?  'البيانات المدخلة غير موجودة لدينا ':'user not exist' ;
-            return $this->apiResponseMessage( 1,$msg, 200);
+            return $this->sendError($msg);
 
         }  
         
@@ -287,7 +275,7 @@ class AuthController extends Controller
             return response()->json([ 'error'=> 0,'message'=> $msg, 'data'=> UserResource::make($check_email)]);
         }else{
             $msg = $lang=='ar' ?  'البيانات المدخلة غير موجودة لدينا ':'user not exist' ;
-            return $this->apiResponseMessage( 1,$msg, 200);
+            return $this->sendError($msg);
         }
         
     }

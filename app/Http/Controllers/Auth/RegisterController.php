@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\API\APIBaseController;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
-class RegisterController extends Controller
+class RegisterController extends APIBaseController
 {
     use RegistersUsers;
 
@@ -30,7 +33,11 @@ class RegisterController extends Controller
             return response()->json(['status' => trans('verification.sent')]);
         }
 
-        return response()->json($user);
+        // return response()->json($user);
+        
+        $token = JWTAuth::fromUser($user);
+        $user['userToken'] = $token;
+        return $this->sendResponse(UserResource::make($user) , "user data");
     }
 
     /**
@@ -41,6 +48,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'username' => 'required|max:255',
             'email' => 'required|email:filter|max:255|unique:users',
+            'phone' => 'required|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
         ]);
     }
@@ -53,6 +61,7 @@ class RegisterController extends Controller
         return User::create([
             'username' => $data['username'],
             'email' => $data['email'],
+            'phone' => $data['phone'],
             'password' => bcrypt($data['password']),
         ]);
     }
