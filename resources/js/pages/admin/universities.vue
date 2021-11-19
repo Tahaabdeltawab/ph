@@ -1,5 +1,5 @@
 <template>
-    <!-- products -->
+    <!-- universities -->
     <div class="container">
       <div class="row">
         <div class="col-xl-12 col-lg-12">
@@ -9,39 +9,38 @@
                 <div class="card-header">
                   <div class="section-header-left">
                     <h3 class="text-light-black header-title title">
-                    {{ title }}
-                    <a v-if="myPlace" v-b-modal.addProductModal class="btn btn-dark add-product-modal-btn" href="javascript:void(0)" >{{ $t('Add Product') }}</a>
-                    <add-product-modal :place_id="place_id" />
+                    <a v-b-modal.addUniversityModal class="btn btn-dark add-product-modal-btn" href="javascript:void(0)" >{{ $t('Add University') }}</a>
+                    <add-university-modal />
                   </h3>
                   </div>
                 </div>
-                <div class="card-body no-padding bg-white">
+                <div class="card-body no-padding">
                   <div class="row">
-                    <div v-for="product in infos" :key="product.id" class="col-lg-12">
-                      <div class="restaurent-product-list">
+                    <div v-for="university in universities" :key="university.id" class="col-lg-12">
+                     <div class="restaurent-product-list">
                         <div class="restaurent-product-detail">
-                          <div class="restaurent-product-img">
-                            <img :src="product.image" class="img-fluid" :alt="locale == 'ar' ? product.name_ar : product.name_en" />
-                          </div>
+                          <!-- <div class="restaurent-product-img">
+                            <img :src="university.image" class="img-fluid" :alt="locale == 'ar' ? university.name_ar : university.name_en" />
+                          </div> -->
                           <div class="restaurent-product-left">
                             <div class="restaurent-product-title-box">
                               <div class="restaurent-product-box">
                                 <div class="restaurent-product-title">
                                   <h6 class="mb-2" data-toggle="modal" data-target="#restaurent-popup">
-                                    <p class="text-light-black fw-600" >{{ locale == 'ar' ? product.name_ar : product.name_en }}</p>
+                                    <p class="text-light-black fw-600" >{{university.title}}</p>
                                   </h6>
                                 </div>
                               </div>
                             </div>
                             <div class="restaurent-product-caption-box">
-                              <span class="text-light-white">{{locale == 'ar' ? product.description_ar : product.description_en}}</span>
+                              <span class="text-light-white">{{'university.description_ar'}}</span>
                             </div>
                             <div class="restaurent-tags-price">
                               <div class="restaurent-product-price title full-width">
                                 <h6 class="text-success fw-600 no-margin">
-                                  {{ product.price }}
+                                  {{ 'university.price' }}
                                 </h6>
-                                  <span class="ml-3">{{product.created_at}}</span>
+                                  <span class="ml-3">{{'university.created_at'}}</span>
                               </div>
                             </div>
                           </div>
@@ -56,18 +55,30 @@
         </div>
       </div>
     </div>
-    <!-- products -->
+    <!-- universities -->
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import AddProductModal from '~/components/place/AddProductModal.vue'
+import AddUniversityModal from '~/components/Admin/universities/AddUniversityModal.vue'
   export default {
-      computed: mapGetters({
+  middleware: 'auth',
+  computed: mapGetters({
     locale: 'lang/locale',
+    universities: 'student/universities'
   }),
-  components: { AddProductModal },
-    props: ['infos', 'title', 'myPlace', 'place_id'],
+  metaInfo () {
+  return { title: this.$t('universities') }
+  },
+   created() {
+     this.fetchUniversities()
+    },
+  methods: {
+    async fetchUniversities(){
+      await this.$store.dispatch('student/fetchUniversities')
+    }
+  },
+  components: { AddUniversityModal },
   }
 </script>
 

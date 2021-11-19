@@ -17,7 +17,7 @@
         <div class="row">
           <div class="col-12">
             <div class="row">
-              <div v-for="popular in populars" :key="popular.id" class="col-lg-4 col-md-6 col-sm-6 popular">
+              <div v-for="popular in populars" :key="popular.id" class="col-6 col-lg-4 popular wow animate__animated animate__fadeInUp">
                 <router-link :to="{ name: 'place', params: { id: popular.id } }">
                   <div class="product-box">
                     <div class="product-img">

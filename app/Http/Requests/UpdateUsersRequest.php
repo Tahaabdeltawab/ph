@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUsersRequest extends FormRequest
 {
@@ -24,11 +26,11 @@ class UpdateUsersRequest extends FormRequest
     {
         return [
             
-            'name' => 'required',
+            'username' => 'required',
             'email' => 'required|email|unique:users,email,'.$this->route('user'),
-            
-            'role_id' => 'required',
-            'role_id' => 'required',
+            'phone' => 'required|unique:users,phone,'.$this->route('user'),
+            'role' => ['required', Rule::in(User::$roles)],
+            "password" => 'nullable|string|min:8|confirmed'
         ];
     }
 }

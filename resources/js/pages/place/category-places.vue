@@ -14,13 +14,14 @@ export default {
   props: ["id"],
   // this.$route.params.id
   methods: {
-    async fetchCategoryPlaces(id) {
-      await this.$store.dispatch("place/fetchCategoryPlaces", {id});
+    async fetchCategoryPlaces(id, area_id) {
+      await this.$store.dispatch("place/fetchCategoryPlaces", {id, area_id});
       this.$store.dispatch("general/changeWait", { wait: false });
     },
   },
   async created() {
-    await this.fetchCategoryPlaces(this.id);
+
+    await this.fetchCategoryPlaces(this.id, this.user.area_id);
   },
   metaInfo() {
     return { title: this.$t('Category') };
@@ -32,6 +33,7 @@ export default {
   },
   computed: mapGetters({
     categoryPlaces: "place/categoryPlaces",
+    user: "auth/user",
   }),
 };
 </script>

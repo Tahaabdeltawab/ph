@@ -31,6 +31,11 @@
           <img :src="asset('q/assets/img/svg/twitter.svg')">
         </a>
       </li>
+      <li v-if="place.Instagram">
+        <a class="rect-tag instagram" target="_blank" :href="place.Instagram">
+          <b-icon icon="instagram" fixed-width font-scale="1.5"></b-icon>
+        </a>
+      </li>
     </ul>
   </div>
 </template>
@@ -135,5 +140,8 @@ import { mapGetters } from "vuex";
 }
 .rect-tag.twitter img {
   height: 17px;
+}
+.rect-tag.instagram * {
+  color: #f029ad;
 }
 </style>

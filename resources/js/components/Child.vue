@@ -1,7 +1,8 @@
 <template>
   <transition name="page" mode="out-in">
     <slot>
-      <router-view />
+      <!-- why putting key? see https://bit.ly/3lo5w0t  -->
+      <router-view :key="$route.fullPath" />
     </slot>
   </transition>
 </template>

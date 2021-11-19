@@ -3,8 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Models\City;
-use App\Models\Area;
 
 class UserResource extends JsonResource
 {
@@ -21,6 +19,8 @@ class UserResource extends JsonResource
             "username" => $this->username,
             'email' => $this->email,
             "phone" => $this->phone,
+            "role" => $this->role,
+            "status" => $this->status,
             "token" => $this->userToken,
         ];
         return $return;

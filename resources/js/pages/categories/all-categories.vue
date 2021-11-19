@@ -15,7 +15,7 @@ import Categories from '~/components/home/Categories';
     methods: {
      async fetchAllCategories() {
       // if the categories is already loaded in vuex, show the categories instantly and don't wait for the request to be finished.
-      if (this.categories.length) {
+      if (this.categories) {
         this.$store.dispatch("general/changeWait", { wait: false });
         this.$store.dispatch("home/fetchAllCategories");
       } else {

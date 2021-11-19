@@ -1,10 +1,6 @@
 <template>
-  <div class="row">
-    <div class="col-lg-10 m-auto">
-      <file-manager></file-manager>
-
-
-    </div>
+  <div class="container-fluid file">
+    <file-manager></file-manager>
   </div>
 </template>
 
@@ -14,11 +10,6 @@ import { mapGetters } from "vuex";
 
 export default {
   middleware: 'auth',
-  methods: {
-
-  },
-  async created() {
-  },
   metaInfo () {
     return { title: this.$t('home') }
   },
@@ -29,3 +20,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.file{
+  height: 800px;
+}
+.file *{
+  direction: ltr;
+  text-align: left;
+}
+</style>

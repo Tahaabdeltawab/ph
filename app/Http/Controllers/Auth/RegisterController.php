@@ -32,9 +32,7 @@ class RegisterController extends APIBaseController
         if ($user instanceof MustVerifyEmail) {
             return response()->json(['status' => trans('verification.sent')]);
         }
-
-        // return response()->json($user);
-        
+                
         $token = JWTAuth::fromUser($user);
         $user['userToken'] = $token;
         return $this->sendResponse(UserResource::make($user) , "user data");

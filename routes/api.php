@@ -58,7 +58,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 // Route::post("registration", [AuthController::class ,"registration"]);
-// Route::post('app_login' , [AuthController::class , 'app_login']);
+Route::post('app_login' , [AuthController::class , 'app_login']);
 // Route::post('social_login' , [AuthController::class , 'social_login']);
 
 // Route::post('change_password' , [AuthController::class , 'change_password']);
@@ -73,11 +73,11 @@ Route::group([
 });
 
 
-Route::get('conversations' , [ChatController::class , 'conversations']);
-Route::get('start-conversation/{user_id}' , [ChatController::class , 'startConversation']);
-Route::get('accept-conversation/{conversation_id}' , [ChatController::class , 'acceptConversation']);
-Route::post('chat/message/send' , [ChatController::class , 'sendMessage']);
-Route::get('get-conversation-messages/{conversation_id}' , [ChatController::class , 'getConversationMessages']);
+// Route::get('conversations' , [ChatController::class , 'conversations']);
+// Route::get('start-conversation/{user_id}' , [ChatController::class , 'startConversation']);
+// Route::get('accept-conversation/{conversation_id}' , [ChatController::class , 'acceptConversation']);
+// Route::post('chat/message/send' , [ChatController::class , 'sendMessage']);
+// Route::get('get-conversation-messages/{conversation_id}' , [ChatController::class , 'getConversationMessages']);
 
 
 
@@ -89,24 +89,30 @@ Route::prefix('admin')->group(function () {
     // Auth::routes();
     // Route::post('logout', [LoginController::class, 'logout_web'])->name('logout');
     // Route::post('login', [LoginController::class, 'postLogin']);
-
-    Route::middleware('auth')->group(function () {
-        Route::get('/home', [App\Http\Controllers\API\HomeController::class, 'index']);
-        Route::resource('tests', App\Http\Controllers\API\TestsController::class);
-        Route::resource('roles', App\Http\Controllers\API\RolesController::class);
-        Route::post('roles_mass_destroy', [App\Http\Controllers\API\RolesController::class, 'massDestroy'])->name('roles.mass_destroy');
+    
+    // Route::middleware('auth')->group(function () {
         Route::resource('users', App\Http\Controllers\API\UsersController::class);
         Route::post('users_mass_destroy', [App\Http\Controllers\API\UsersController::class, 'massDestroy'])->name('users.mass_destroy');
-        Route::resource('user_actions', App\Http\Controllers\API\UserActionsController::class);
-        Route::resource('topics', App\Http\Controllers\API\TopicsController::class);
-        Route::post('topics_mass_destroy', [App\Http\Controllers\API\TopicsController::class, 'massDestroy'])->name('topics.mass_destroy');
-        Route::resource('chapters', App\Http\Controllers\API\ChaptersController::class);
-        Route::post('chapters_mass_destroy', [App\Http\Controllers\API\ChaptersController::class, 'massDestroy'])->name('chapters.mass_destroy');
-        Route::resource('questions', App\Http\Controllers\API\QuestionsController::class);
-        Route::post('questions_mass_destroy', [App\Http\Controllers\API\QuestionsController::class, 'massDestroy'])->name('questions.mass_destroy');
-        Route::resource('questions_options', App\Http\Controllers\API\QuestionsOptionsController::class);
-        Route::post('questions_options_mass_destroy', [App\Http\Controllers\API\QuestionsOptionsController::class, 'massDestroy'])->name('questions_options.mass_destroy');
-        Route::resource('results', App\Http\Controllers\API\ResultsController::class);
-        Route::post('results_mass_destroy', [App\Http\Controllers\API\ResultsController::class, 'massDestroy'])->name('results.mass_destroy');
-    });
+        // Route::get('/home', [App\Http\Controllers\API\HomeController::class, 'index']);
+        // Route::resource('universities', App\Http\Controllers\API\UniversitiesController::class);
+        // Route::post('universities_mass_destroy', [App\Http\Controllers\API\UniversitiesController::class, 'massDestroy'])->name('universities.mass_destroy');
+        // Route::resource('faculties', App\Http\Controllers\API\FacultiesController::class);
+        // Route::post('faculties_mass_destroy', [App\Http\Controllers\API\FacultiesController::class, 'massDestroy'])->name('faculties.mass_destroy');
+        // Route::resource('years', App\Http\Controllers\API\YearsController::class);
+        // Route::post('years_mass_destroy', [App\Http\Controllers\API\YearsController::class, 'massDestroy'])->name('years.mass_destroy');
+        // Route::resource('topics', App\Http\Controllers\API\TopicsController::class);
+        // Route::post('topics_mass_destroy', [App\Http\Controllers\API\TopicsController::class, 'massDestroy'])->name('topics.mass_destroy');
+        // Route::resource('tests', App\Http\Controllers\API\TestsController::class);
+        // Route::resource('roles', App\Http\Controllers\API\RolesController::class);
+        // Route::post('roles_mass_destroy', [App\Http\Controllers\API\RolesController::class, 'massDestroy'])->name('roles.mass_destroy');
+        // Route::resource('user_actions', App\Http\Controllers\API\UserActionsController::class);
+        // Route::resource('chapters', App\Http\Controllers\API\ChaptersController::class);
+        // Route::post('chapters_mass_destroy', [App\Http\Controllers\API\ChaptersController::class, 'massDestroy'])->name('chapters.mass_destroy');
+        // Route::resource('questions', App\Http\Controllers\API\QuestionsController::class);
+        // Route::post('questions_mass_destroy', [App\Http\Controllers\API\QuestionsController::class, 'massDestroy'])->name('questions.mass_destroy');
+        // Route::resource('questions_options', App\Http\Controllers\API\QuestionsOptionsController::class);
+        // Route::post('questions_options_mass_destroy', [App\Http\Controllers\API\QuestionsOptionsController::class, 'massDestroy'])->name('questions_options.mass_destroy');
+        // Route::resource('results', App\Http\Controllers\API\ResultsController::class);
+        // Route::post('results_mass_destroy', [App\Http\Controllers\API\ResultsController::class, 'massDestroy'])->name('results.mass_destroy');
+    // });
 });

@@ -137,6 +137,9 @@ export default {
 </script>
 
 <style scoped>
+.section-padding {
+  padding: 20px 0;
+}
 .footer-logo {
   background: white;
   padding: 10px;

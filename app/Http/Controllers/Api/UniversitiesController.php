@@ -4,14 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Models\University;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreUniversitysRequest;
-use App\Http\Requests\UpdateUniversitysRequest;
+use App\Http\Requests\StoreUniversitiesRequest;
 
-class UniversitysController extends APIBaseController
+class UniversitiesController extends APIBaseController
 {
     public function __construct()
     {
-        $this->middleware('admin');
+        //$this->middleware('admin');
     }
 
     /**
@@ -21,8 +20,8 @@ class UniversitysController extends APIBaseController
      */
     public function index()
     {
-        $universities = University::all();
-        return $this->sendResponse($universities);
+        $us = University::all();
+        return $this->sendResponse($us);
     }
 
     /**
@@ -38,14 +37,14 @@ class UniversitysController extends APIBaseController
     /**
      * Store a newly created University in storage.
      *
-     * @param  \App\Http\Requests\StoreUniversitysRequest  $request
+     * @param  \App\Http\Requests\StoreUniversitiesRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUniversitysRequest $request)
+    public function store(StoreUniversitiesRequest $request)
     {
-        University::create($request->all());
+        $u = University::create($request->all());
 
-        return redirect()->route('universities.index');
+        return $this->sendResponse($u);
     }
 
 
@@ -65,16 +64,16 @@ class UniversitysController extends APIBaseController
     /**
      * Update University in storage.
      *
-     * @param  \App\Http\Requests\UpdateUniversitysRequest  $request
+     * @param  \App\Http\Requests\UpdateUniversitiesRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateUniversitysRequest $request, $id)
+    public function update(StoreUniversitiesRequest $request, $id)
     {
         $university = University::findOrFail($id);
         $university->update($request->all());
-
-        return redirect()->route('universities.index');
+        $u = University::find($university->id);
+        return $this->sendResponse($u);
     }
 
 
@@ -86,9 +85,8 @@ class UniversitysController extends APIBaseController
      */
     public function show($id)
     {
-        $university = University::findOrFail($id);
-
-        return view('universities.show', compact('university'));
+        $u = University::findOrFail($id);
+        return $this->sendResponse($u);
     }
 
 
@@ -102,8 +100,7 @@ class UniversitysController extends APIBaseController
     {
         $university = University::findOrFail($id);
         $university->delete();
-
-        return redirect()->route('universities.index');
+        return $this->sendSuccess('success');
     }
 
     /**
@@ -119,6 +116,9 @@ class UniversitysController extends APIBaseController
             foreach ($entries as $entry) {
                 $entry->delete();
             }
+
+            return $this->sendSuccess('success');
+
         }
     }
 

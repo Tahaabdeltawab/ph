@@ -410,7 +410,7 @@ Version: 1.0.0
         height: 65px;
     }
     .restaurent-product-list .restaurent-product-detail {
-        flex-direction: column-reverse;
+        /* flex-direction: column-reverse; */
     }
     .restaurent-product-list .restaurent-product-img {
         margin: 15px auto;
@@ -482,7 +482,7 @@ Version: 1.0.0
         height: 70px;
     }
     .restaurent-product-list .restaurent-product-detail {
-        padding-right: 10px;
+        /* padding-right: 10px; */
         padding-bottom: 0;
     }
     .restaurent-product-list .restaurent-product-detail .restaurent-tags {

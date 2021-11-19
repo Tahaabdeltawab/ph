@@ -4,6 +4,19 @@ function page(path) {
 }
 
 export default [
+
+    // admin
+
+    { path: '/admin/universities', name: 'universities', component: page('admin/universities.vue') },
+    { path: '/admin/faculties/:university_id', name: 'faculties', component: page('admin/faculties.vue'), props: true },
+    { path: '/admin/years/:faculty_id', name: 'years', component: page('admin/years.vue'), props: true },
+    { path: '/admin/topics/:year_id', name: 'topics', component: page('admin/topics.vue'), props: true },
+    { path: '/admin/chapters/:topic_id', name: 'chapters', component: page('admin/chapters.vue'), props: true },
+    { path: '/admin/questions/:chapter_id', name: 'questions', component: page('admin/questions.vue'), props: true },
+
+
+    // user
+
     { path: '/', name: 'welcome', component: page('welcome.vue') },
 
     { path: '/login', name: 'login', component: page('auth/login.vue') },

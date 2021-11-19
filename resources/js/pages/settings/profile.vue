@@ -25,7 +25,7 @@
       <div class="mb-3 row">
         <label class="col-md-3 col-form-label text-md-end">{{ $t('Phone') }}</label>
         <div class="col-md-7">
-          <input v-model="form.phone" :class="{ 'is-invalid': form.errors.has('phone') }" class="form-control" type="number" name="phone">
+          <input v-model="form.phone" :class="{ 'is-invalid': form.errors.has('phone') }" class="form-control" type="text" name="phone">
           <has-error :form="form" field="phone" />
         </div>
       </div>

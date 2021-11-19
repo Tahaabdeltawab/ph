@@ -15,7 +15,7 @@
                   </h3>
                 </div>
               </div>
-              <div class="card-body no-padding">
+              <div class="card-body no-padding bg-white">
                 <div class="row">
                   <div v-for="(service, index) in infos" :key="service.id" class="col-lg-12">
                     <div class="restaurent-product-list">

@@ -91,6 +91,11 @@ export const actions = {
             commit(types.FETCH_PLACE_SUCCESS, { place: data.data })
         } catch (e) {}
     },
+    async setPlace({ commit }, { place }) {
+        try {
+            commit(types.FETCH_PLACE_SUCCESS, { place: place })
+        } catch (e) {}
+    },
     async toggleFav({ commit }, { id }) {
         try {
             // commit(types.TOGGLE_FAV_SUCCESS)
@@ -98,11 +103,13 @@ export const actions = {
             commit(types.TOGGLE_FAV_SUCCESS)
         } catch (e) {}
     },
-    async updatePlaceDetails({ commit }, { form }) {
+    async updatePlaceDetails({ commit, dispatch }, { form }) {
         try {
             const { data } = await form.post('/api/update_myPlace')
-            if (data.error == 0)
-                commit(types.UPDATE_PLACE_SUCCESS, { place: form })
+            if (data.error == 0) {
+                dispatch('fetchPlace', { id: form.place_id });
+                // commit(types.UPDATE_PLACE_SUCCESS, { place: form })
+            }
         } catch (e) {}
     },
     async addPlaceService({ commit }, { form }) {
@@ -128,9 +135,9 @@ export const actions = {
     },
 
     // category place
-    async fetchCategoryPlaces({ commit }, { id }) {
+    async fetchCategoryPlaces({ commit }, { id, area_id }) {
         try {
-            const { data } = await axios.get('/api/show_places_BySubcatId?subcat_id=' + id)
+            const { data } = await axios.get(`/api/show_places_BySubcatId?subcat_id=${id}&area_id=${area_id}`)
             commit(types.FETCH_CATEGORY_PLACES_SUCCESS, { categoryPlaces: data.data })
         } catch (e) {}
     },

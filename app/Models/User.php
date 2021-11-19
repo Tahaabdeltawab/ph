@@ -6,12 +6,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Hash;
 use Mail;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
-    use Notifiable;
+    use Notifiable, HasFactory;
 
-    protected $fillable = ['username', 'phone', 'email', 'password', 'remember_token', 'role_id'];
+    protected $fillable = ['username', 'phone', 'email', 'password', 'remember_token', 'role', 'status'];
 
     public static function boot()
     {
@@ -31,36 +31,37 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
         }
     }
 
-
-    /**
-     * Set to null if empty
-     * @param $input
-     */
-    public function setRoleIdAttribute($input)
-    {
-        $this->attributes['role_id'] = $input ? $input : null;
+    public function scopeActive($q){
+        return $q->where('status', true);
     }
 
-    public function role()
-    {
-        return $this->belongsTo(Role::class, 'role_id');
+    public function scopeInactive($q){
+        return $q->where('status', false);
     }
 
-    public function isAdmin()
-    {
-        foreach ($this->role()->get() as $role) {
-            if ($role->id == 1) {
-                return true;
-            }
-        }
+    public function scopeAdmin($q){
+        return $q->where('role', 'admin');
+    }
 
-        return false;
+    public function scopeUser($q){
+        return $q->where('role', 'user');
+    }
+
+    public function isAdmin(){
+        return $this->role == 'admin';
+    }
+
+    public function isUser(){
+        return $this->role == 'user';
     }
 
 
-
-
-
+    public static $roles = [
+        'admin',
+        'user',
+    ];
+ 
+    
 
 
 

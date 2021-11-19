@@ -5,7 +5,7 @@
       <!-- <component :is="layout" v-if="layout" /> -->
       <!-- <component v-show="!wait" :is="layout" v-if="layout" /> --> <!-- create right margin --> 
       <!-- <component :style="{visibility: wait ? 'hidden' : 'visible'}" :is="layout" v-if="layout" /> -->
-      <component :style="{opacity: wait ? 0 : 1}" :is="layout" v-if="layout" />
+      <component :style="{opacity: wait ? 0 : 1}" :is="layout" v-if="layout" class="wow animate__animated animate__fadeIn" />
     </transition>
      <!-- <h1 style="color:red; position:fixed; top:110px; right:0; z-index:111111">
       {{wait ? 'wait true' : 'wait false'}}

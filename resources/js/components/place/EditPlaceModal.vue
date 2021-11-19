@@ -46,6 +46,29 @@
           <has-error :form="form" field="Twitter" />
       </b-form-group>
 
+      <b-form-group :label="$t('Instagram')" label-for="Instagram" :class="{ 'is-invalid': form.errors.has('Instagram') }">
+         <input type="text" v-model="form.Instagram" name="Instagram" class="form-control">
+          <has-error :form="form" field="Instagram" />
+      </b-form-group>
+
+      <b-form-group :label="$t('Latitude')" label-for="lat" :class="{ 'is-invalid': form.errors.has('lat') }">
+         <input type="text" v-model="form.lat" name="lat" class="form-control">
+          <has-error :form="form" field="lat" />
+      </b-form-group>
+
+      <b-form-group :label="$t('Longitude')" label-for="lon" :class="{ 'is-invalid': form.errors.has('lon') }">
+         <input type="text" v-model="form.lon" name="lon" class="form-control">
+          <has-error :form="form" field="lon" />
+      </b-form-group>
+
+      <b-form-group :label="$t('Image')" label-for="image" :class="{ 'is-invalid': form.errors.has('image') }">
+        <input type="file" ref="image" @change="catchFile" name="image" class="form-control" required>
+        <has-error :form="form" field="image" />
+      </b-form-group>
+      <div class="col-md-4 mb-3">
+        <img :src="place.image" class="img-fluid" alt="#" />
+      </div>
+
       <!-- Submit Button -->
       <div class="mb-3 row">
         <div class="col-md-9 ms-md-auto">
@@ -86,6 +109,10 @@ export default {
       phone: '',
       Facebook: '',
       Twitter: '',
+      Instagram: '',
+      lat: '',
+      lon: '',
+      image: '',
     }),
   }),
   mounted () {
@@ -103,6 +130,9 @@ export default {
       this.$nextTick(() => {
         this.$bvModal.hide('editPlaceModal')
       })
+    },
+    catchFile(){
+      this.form.image = this.$refs.image.files[0];
     },
     fillForm () {
     // Fill the form with place data.

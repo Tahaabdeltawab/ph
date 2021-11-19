@@ -71,7 +71,6 @@ export const actions = {
         }
     },
     async fetchNotifications({ commit }) {
-        console.log('before call notifs api');
         try {
             const { data } = await axios.get('/api/show_all_notification')
             let notifications = data.data;

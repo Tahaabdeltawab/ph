@@ -7,12 +7,13 @@ use App\Models\Role;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
+use App\Http\Resources\UserResource;
 
 class UsersController extends APIBaseController
 {
     public function __construct()
     {
-        $this->middleware('admin');
+        //$this->middleware('admin');
     }
 
     /**
@@ -23,8 +24,7 @@ class UsersController extends APIBaseController
     public function index()
     {
         $users = User::all();
-
-        return view('users.index', compact('users'));
+        return $this->sendResponse( UserResource::collection($users));
     }
 
     /**
@@ -82,9 +82,21 @@ class UsersController extends APIBaseController
     public function update(UpdateUsersRequest $request, $id)
     {
         $user = User::findOrFail($id);
-        $user->update($request->all());
 
-        return redirect()->route('users.index');
+          $to_save = [
+          'username' => $request->username,
+          'email' => $request->email,
+          'phone' => $request->phone,
+          'role' => $request->role,
+          'status' => $request->status,
+          ];
+
+          if($request->password && ! empty($request->password))
+          $to_save['password'] = Hash::make($request->password);
+
+
+        $user->update($to_save);
+        return $this->sendResponse( new UserResource( User::find($id) ), 'updated successfully' );
     }
 
 
@@ -116,8 +128,7 @@ class UsersController extends APIBaseController
     {
         $user = User::findOrFail($id);
         $user->delete();
-
-        return redirect()->route('users.index');
+        return $this->sendSuccess( 'User deleted successfully' );
     }
 
     /**
@@ -133,6 +144,8 @@ class UsersController extends APIBaseController
             foreach ($entries as $entry) {
                 $entry->delete();
             }
+        return $this->sendSuccess( 'Users deleted successfully' );
+
         }
     }
 

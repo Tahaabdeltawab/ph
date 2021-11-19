@@ -1,15 +1,9 @@
 <template>
   <li class="nav-item dropdown">
-    <a
-      href="#"
-      class="nav-link dropdown-toggle"
-      data-bs-toggle="dropdown"
-      role="button"
-      aria-haspopup="true"
-      aria-expanded="false"
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"
     >
      <b-icon icon="bell-fill" class="notification-bell"></b-icon>
-      <span class="btn__badge pulse-button">{{notifications.length}}</span>
+      <span v-if="notifications" class="btn__badge pulse-button">{{notifications.length}}</span>
     </a>
     <ul class="dropdown-menu notify-drop">
       <div class="notify-drop-title">
@@ -21,18 +15,20 @@
         <li v-for="notification in notifications" :key="notification.id" class="row">
           <div class="col-md-3 col-sm-3 col-xs-3 notify-img-section">
             <div class="notify-img">
-              <img v-if="notification.image" :src="notification.image" alt="" />
+              <router-link :to="{name: 'notifications'}">
+                <img v-if="notification.image" :src="notification.image" alt="" />
+              </router-link>
             </div>
           </div>
           <div class="col-md-9 col-sm-9 col-xs-9 pd-l0">
-            <a href="#">{{notification.title_ar}}</a>
+            <router-link :to="{name: 'notifications'}">{{notification.title_ar}}</router-link>
             <p>{{notification.body_ar}}</p>
             <!-- <p class="time">2 mins ago</p> -->
           </div>
         </li>
       </div>
       <div class="notify-drop-footer text-center">
-        <a href="#"><i class="fa fa-eye"></i> {{$t('See all')}}</a>
+        <router-link :to="{name: 'notifications'}"><i class="fa fa-eye"></i> {{$t('See all')}}</router-link>
       </div>
     </ul>
   </li>

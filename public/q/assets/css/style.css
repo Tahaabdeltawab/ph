@@ -1088,12 +1088,17 @@ span.type-tag {
 1.5. Section-Colors-&-Backgrounds
 ====================*/
 
+.bg-white {
+    background-color: #fff;
+}
+
 .bg-light-white {
     background-color: #f4f4f4;
 }
 
 .bg-light-theme {
-    background-color: #fbfbfc;
+    /* background-color: #fbfbfc; */
+    background-color: #f3f4f6;
 }
 
 .bg-light-green {
@@ -1118,6 +1123,15 @@ span.type-tag {
 
 .w-45 {
     width: 45%;
+}
+
+@media (max-width: 768px) {
+    .w-30 {
+        width: 60%;
+    }
+    .w-45 {
+        width: 100%;
+    }
 }
 
 .btn-brand-layout {
@@ -2262,7 +2276,7 @@ footer .ft-social-media {
     display: block;
     align-items: center;
     height: 100%;
-    padding-top: 80px;
+    /* padding-top: 80px; */
 }
 
 footer .ft-social-media ul {

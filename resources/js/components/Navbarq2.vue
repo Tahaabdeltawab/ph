@@ -10,6 +10,7 @@
            <img :src="asset('uploads/Logo.png')" class="img-fluid nav-logo" alt="app logo" />
         </router-link>
         <router-link :to="{ name: 'home' }" class="navbar-brand">home</router-link>
+        <router-link :to="{ name: 'universities' }" class="navbar-brand">univs</router-link>
 
         <button
           class="navbar-toggler"

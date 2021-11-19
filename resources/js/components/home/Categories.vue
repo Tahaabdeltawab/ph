@@ -15,7 +15,7 @@
       <div class="row">
         <div class="col-12">
           <div class="row">
-            <div v-for="category in categories" :key="category.id" class="col-lg-4 col-md-6 col-sm-6 category">
+            <div v-for="category in categories" :key="category.id" class="col-6 col-lg-4 category wow animate__animated animate__fadeInUp">
               <router-link :to="{ name: 'category', params: { id: category.id } }">
                 <div class="product-box">
                   <div class="product-img">

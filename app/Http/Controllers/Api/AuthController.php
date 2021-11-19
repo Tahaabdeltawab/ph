@@ -20,7 +20,6 @@ use App\Http\Resources\UserResource;
 
 class AuthController extends APIBaseController
 {
-    use ApiResponseTrait;
 
     public function registration (Request $request){
         

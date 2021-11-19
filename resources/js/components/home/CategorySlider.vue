@@ -11,8 +11,7 @@
             </h3>
           </div>
         </div>
-        <swiper :options="swiperOptions"
-        >
+        <swiper :options="swiperOptions" class="wow animate__animated animate__slideInRight" >
           <swiper-slide v-for="category in categories" :key="category.id" class="swiper-slide slide-item tab">
             <router-link :to="{ name: 'category', params: { id: category.id } }" class="tablinks slide active">
               <span>
