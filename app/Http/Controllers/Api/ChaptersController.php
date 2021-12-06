@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Chapter;
-use App\Models\Topic;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreChaptersRequest;
 use App\Http\Requests\UpdateChaptersRequest;
+use App\Http\Resources\ChapterResource;
 
 class ChaptersController extends APIBaseController
 {
@@ -16,46 +15,43 @@ class ChaptersController extends APIBaseController
     }
 
     /**
-     * Display a listing of Topic.
+     * Display a listing of Chapter.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $chapters = Chapter::all();
-
-        return view('chapters.index', compact('chapters'));
+        $topic_id = request()->topic_id;
+        $chapters = Chapter::when($topic_id, function($q)use($topic_id){return $q->where('topic_id', $topic_id);})->get();
+        return $this->sendResponse(ChapterResource::collection($chapters));
     }
 
     /**
-     * Show the form for creating new chapter.
+     * Show the form for creating new Chapter.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        $relations = [
-            'topics' => Topic::get()->pluck('title', 'id')->prepend('Please select', ''),
-        ];
-        return view('chapters.create', $relations);
+        return view('chapters.create');
     }
 
     /**
-     * Store a newly created chapter in storage.
+     * Store a newly created Chapter in storage.
      *
-     * @param  \App\Http\Requests\StoreChaptersRequest  $request
+     * @param  \App\Http\Requests\UpdateChaptersRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreChaptersRequest $request)
+    public function store(UpdateChaptersRequest $request)
     {
-        Chapter::create($request->all());
+        $chapter = Chapter::create($request->validated());
 
-        return redirect()->route('chapters.index');
+        return $this->sendResponse(new ChapterResource($chapter));
     }
 
 
     /**
-     * Show the form for editing chapter.
+     * Show the form for editing Chapter.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -63,14 +59,12 @@ class ChaptersController extends APIBaseController
     public function edit($id)
     {
         $chapter = Chapter::findOrFail($id);
-        $relations = [
-            'topics' => Topic::get()->pluck('title', 'id')->prepend('Please select', ''),
-        ];
-        return view('chapters.edit', compact('chapter') + $relations);
+
+        return view('chapters.edit', compact('chapter'));
     }
 
     /**
-     * Update chapter in storage.
+     * Update Chapter in storage.
      *
      * @param  \App\Http\Requests\UpdateChaptersRequest  $request
      * @param  int  $id
@@ -79,14 +73,14 @@ class ChaptersController extends APIBaseController
     public function update(UpdateChaptersRequest $request, $id)
     {
         $chapter = Chapter::findOrFail($id);
-        $chapter->update($request->all());
-
-        return redirect()->route('chapters.index');
+        $chapter->update($request->validated());
+        $chapter = Chapter::find($chapter->id);
+        return $this->sendResponse(new ChapterResource($chapter));
     }
 
 
     /**
-     * Display chapter.
+     * Display Chapter.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -94,13 +88,12 @@ class ChaptersController extends APIBaseController
     public function show($id)
     {
         $chapter = Chapter::findOrFail($id);
-
-        return view('chapters.show', compact('chapter'));
+        return $this->sendResponse(new ChapterResource($chapter));
     }
 
 
     /**
-     * Remove chapter from storage.
+     * Remove Chapter from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -109,12 +102,11 @@ class ChaptersController extends APIBaseController
     {
         $chapter = Chapter::findOrFail($id);
         $chapter->delete();
-
-        return redirect()->route('chapters.index');
+        return $this->sendSuccess('success');
     }
 
     /**
-     * Delete all selected chapter at once.
+     * Delete all selected Chapter at once.
      *
      * @param Request $request
      */
@@ -126,6 +118,9 @@ class ChaptersController extends APIBaseController
             foreach ($entries as $entry) {
                 $entry->delete();
             }
+
+            return $this->sendSuccess('success');
+
         }
     }
 

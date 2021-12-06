@@ -16,9 +16,10 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, $role)
     {
-        if( ! auth()->user()->checkRole($role) || ! auth()->user()->status )
-        abort(403, 'غير مسموح');
-        else
+        if( ! auth()->user()->checkRole($role) )
+        // abort(403);
+        return app('\App\Http\Controllers\API\APIBaseController')->sendError('Unauthorized', 403);
+
         return $next($request);
     }
 }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Topic;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreTopicsRequest;
 use App\Http\Requests\UpdateTopicsRequest;
+use App\Http\Resources\TopicResource;
 
 class TopicsController extends APIBaseController
 {
@@ -21,8 +21,9 @@ class TopicsController extends APIBaseController
      */
     public function index()
     {
-        $topics = Topic::all();
-        return $this->sendResponse($topics);
+        $year_id = request()->year_id;
+        $topics = Topic::when($year_id, function($q)use($year_id){return $q->where('year_id', $year_id);})->get();
+        return $this->sendResponse(TopicResource::collection($topics));
     }
 
     /**
@@ -38,14 +39,14 @@ class TopicsController extends APIBaseController
     /**
      * Store a newly created Topic in storage.
      *
-     * @param  \App\Http\Requests\StoreTopicsRequest  $request
+     * @param  \App\Http\Requests\UpdateTopicsRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTopicsRequest $request)
+    public function store(UpdateTopicsRequest $request)
     {
-        Topic::create($request->all());
+        $topic = Topic::create($request->validated());
 
-        return redirect()->route('topics.index');
+        return $this->sendResponse(new TopicResource($topic));
     }
 
 
@@ -72,9 +73,9 @@ class TopicsController extends APIBaseController
     public function update(UpdateTopicsRequest $request, $id)
     {
         $topic = Topic::findOrFail($id);
-        $topic->update($request->all());
-
-        return redirect()->route('topics.index');
+        $topic->update($request->validated());
+        $topic = Topic::find($topic->id);
+        return $this->sendResponse(new TopicResource($topic));
     }
 
 
@@ -87,8 +88,7 @@ class TopicsController extends APIBaseController
     public function show($id)
     {
         $topic = Topic::findOrFail($id);
-
-        return view('topics.show', compact('topic'));
+        return $this->sendResponse(new TopicResource($topic));
     }
 
 
@@ -102,8 +102,7 @@ class TopicsController extends APIBaseController
     {
         $topic = Topic::findOrFail($id);
         $topic->delete();
-
-        return redirect()->route('topics.index');
+        return $this->sendSuccess('success');
     }
 
     /**
@@ -119,6 +118,9 @@ class TopicsController extends APIBaseController
             foreach ($entries as $entry) {
                 $entry->delete();
             }
+
+            return $this->sendSuccess('success');
+
         }
     }
 

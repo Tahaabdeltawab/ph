@@ -5,7 +5,7 @@ use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateUsersRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,15 +24,10 @@ class UpdateUsersRequest extends FormRequest
      */
     public function rules()
     {
-        $type = $this->route('user') ? 'update' : 'create';
-        $passwordRequired = $type == 'create' ? 'required' : 'nullable';
         return [
             'username' => 'required',
-            'email' => 'required|email|unique:users,email,'.$this->route('user'),
-            'phone' => 'required|unique:users,phone,'.$this->route('user'),
-            'role' => ['required', Rule::in(User::$roles)],
-            'status' => ['required', 'boolean'],
-            "password" => "$passwordRequired|string|min:8",
+            'email' => 'required|email|unique:users,email,'.auth()->id(),
+            'phone' => 'required|unique:users,phone,'.auth()->id(),
             'university_id' => 'required|integer|exists:universities,id',
             'faculty_id' => 'required|integer|exists:faculties,id',
             'year_id' => 'required|integer|exists:years,id',

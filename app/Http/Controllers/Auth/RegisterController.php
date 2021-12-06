@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\API\APIBaseController;
-use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -33,9 +32,15 @@ class RegisterController extends APIBaseController
             return response()->json(['status' => trans('verification.sent')]);
         }
                 
-        $token = JWTAuth::fromUser($user);
-        $user['userToken'] = $token;
-        return $this->sendResponse(UserResource::make($user) , "user data");
+        // $token = JWTAuth::fromUser($user);
+        $token = (string) $this->guard()->getToken();
+        $expiration = $this->guard()->getPayload()->get('exp');
+        return $this->sendResponse([
+            'user' => new UserResource($user),
+            'token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => $expiration - time(),
+            ] , "user data");
     }
 
     /**
@@ -47,7 +52,10 @@ class RegisterController extends APIBaseController
             'username' => 'required|max:255',
             'email' => 'required|email:filter|max:255|unique:users',
             'phone' => 'required|max:255|unique:users',
-            'password' => 'required|min:6|confirmed',
+            'university_id' => 'required|integer|exists:universities,id',
+            'faculty_id' => 'required|integer|exists:faculties,id',
+            'year_id' => 'required|integer|exists:years,id',
+            'password' => 'required|min:6',
         ]);
     }
 
@@ -60,6 +68,11 @@ class RegisterController extends APIBaseController
             'username' => $data['username'],
             'email' => $data['email'],
             'phone' => $data['phone'],
+            'university_id' => $data['university_id'],
+            'faculty_id' => $data['faculty_id'],
+            'year_id' => $data['year_id'],
+            'role' => 'user',
+            'status' => true,
             'password' => bcrypt($data['password']),
         ]);
     }

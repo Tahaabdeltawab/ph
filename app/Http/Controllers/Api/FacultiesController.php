@@ -4,10 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Faculty;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreTopicsRequest;
-use App\Http\Requests\UpdateTopicsRequest;
+use App\Http\Requests\UpdateFacultiesRequest;
+use App\Http\Resources\FacultyResource;
 
-class TopicsController extends APIBaseController
+class FacultiesController extends APIBaseController
 {
     public function __construct()
     {
@@ -21,8 +21,9 @@ class TopicsController extends APIBaseController
      */
     public function index()
     {
-        $faculties = Faculty::all();
-        return $this->sendResponse($faculties);
+        $university_id = request()->university_id;
+        $faculties = Faculty::when($university_id, function($q)use($university_id){return $q->where('university_id', $university_id);})->get();
+        return $this->sendResponse(FacultyResource::collection($faculties));
     }
 
     /**
@@ -38,14 +39,14 @@ class TopicsController extends APIBaseController
     /**
      * Store a newly created Faculty in storage.
      *
-     * @param  \App\Http\Requests\StoreTopicsRequest  $request
+     * @param  \App\Http\Requests\UpdateFacultiesRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTopicsRequest $request)
+    public function store(UpdateFacultiesRequest $request)
     {
-        Faculty::create($request->all());
+        $faculty = Faculty::create($request->validated());
 
-        return redirect()->route('faculties.index');
+        return $this->sendResponse(new FacultyResource($faculty));
     }
 
 
@@ -65,16 +66,16 @@ class TopicsController extends APIBaseController
     /**
      * Update Faculty in storage.
      *
-     * @param  \App\Http\Requests\UpdateTopicsRequest  $request
+     * @param  \App\Http\Requests\UpdateFacultiesRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTopicsRequest $request, $id)
+    public function update(UpdateFacultiesRequest $request, $id)
     {
         $faculty = Faculty::findOrFail($id);
-        $faculty->update($request->all());
-
-        return redirect()->route('faculties.index');
+        $faculty->update($request->validated());
+        $faculty = Faculty::find($faculty->id);
+        return $this->sendResponse(new FacultyResource($faculty));
     }
 
 
@@ -87,8 +88,7 @@ class TopicsController extends APIBaseController
     public function show($id)
     {
         $faculty = Faculty::findOrFail($id);
-
-        return view('faculties.show', compact('faculty'));
+        return $this->sendResponse(new FacultyResource($faculty));
     }
 
 
@@ -102,8 +102,7 @@ class TopicsController extends APIBaseController
     {
         $faculty = Faculty::findOrFail($id);
         $faculty->delete();
-
-        return redirect()->route('faculties.index');
+        return $this->sendSuccess('success');
     }
 
     /**
@@ -119,6 +118,9 @@ class TopicsController extends APIBaseController
             foreach ($entries as $entry) {
                 $entry->delete();
             }
+
+            return $this->sendSuccess('success');
+
         }
     }
 

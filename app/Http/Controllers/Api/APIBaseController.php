@@ -40,16 +40,16 @@ class APIBaseController extends Controller
 
     public function sendResponse($data, $message = '', $code = 200)
     {
-        return Response::json($this->makeResponse($data, $message, $code));
+        return Response::json($this->makeResponse($data, $message, $code), $code);
     }
 
     public function sendError($message, $code = 404, $data = [])
     {
-        return Response::json($this->makeError($message, $code, $data));
+        return Response::json($this->makeError($message, $code, $data), $code);
     }
 
     public function sendSuccess($message, $code = 200, $data = [])
     {
-        return Response::json($this->makeSuccess($message, $code, $data), 200);
+        return Response::json($this->makeSuccess($message, $code, $data), $code);
     }
 }

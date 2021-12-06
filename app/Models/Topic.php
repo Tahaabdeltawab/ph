@@ -26,11 +26,15 @@ class Topic extends Model
         return $this->belongsTo(Year::class);
     }
 
-    public function questions()
+    public function definitions()
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany(Definition::class);
     }
-
+    public function terms()
+    {
+        return $this->hasMany(Term::class);
+    }
+    
     public function chapters()
     {
         return $this->hasMany(Chapter::class);

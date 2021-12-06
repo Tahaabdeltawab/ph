@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Exceptions\VerifyEmailException;
 use App\Http\Controllers\API\APIBaseController;
-use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginController extends APIBaseController
 {
@@ -19,11 +20,7 @@ class LoginController extends APIBaseController
     /**
      * Create a new controller instance.
      */
-    public function __construct()
-    {
-        $this->middleware('guest:api')->except('logout');
-        $this->middleware('guest:web')->except('logout_web');
-    }
+    public function __construct(){}
 
     /**
      * Attempt to log the user into the application.
@@ -54,9 +51,12 @@ class LoginController extends APIBaseController
         $this->clearLoginAttempts($request);
 
         $token = (string) $this->guard()->getToken();
+        $user = $this->guard()->user();
         $expiration = $this->guard()->getPayload()->get('exp');
 
-        return response()->json([
+
+        return $this->sendResponse([
+            'user' => new UserResource($user),
             'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => $expiration - time(),
@@ -85,64 +85,6 @@ class LoginController extends APIBaseController
     public function logout(Request $request)
     {
         $this->guard()->logout();
-
-        return response()->json(null, 204);
-    }
-
-
-
-
-
-    public function postLogin(Request $request)
-    {
-
-         $this->validate($request, [
-            'email' => 'required|email', 'password' => 'required',
-        ]);
-
-        $user = User::where([['email',$request->email] ])->first();
-
-        if(is_object($user)&& $user != NULL && (Hash::check($request->password,$user->password)))
-        {
-                if($user->status){
-
-                    $user_role = $user->role;
-
-                     if( $user_role == "1" || $user_role == "3"){
-                         \Auth::guard('web')->loginUsingId($user->id);
-                         return redirect('admin/home');
-                   }else{
-                        \Auth::guard('web')->loginUsingId($user->id);
-                        return redirect('/');
-                     }
-                }else{
-                    return back()->with('msg', 'المستخدم غير نشط');
-                }
-
-            }else{
-                return back()->with('msg', 'اسم مستخدم أو كلمة مرور خاطئة');
-            }
-    }
-
-    public function logout_web(Request $request)
-    {
-        try{
-            // $this->guard()->logout();
-            auth('web')->logout();
-            // \Auth::guard('api')->logout();
-            $request->session()->invalidate();
-    
-            $request->session()->regenerateToken();
-    
-            if ($response = $this->loggedOut($request)) {
-                return $response;
-            }
-    
-            return $request->wantsJson()
-                ? new JsonResponse([], 204)
-                : redirect('admin');
-        }catch(\Throwable $th){
-            throw $th;
-        }
+        return $this->sendSuccess('Logout Successful');
     }
 }

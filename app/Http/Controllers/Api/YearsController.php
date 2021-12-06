@@ -4,10 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Year;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreTopicsRequest;
-use App\Http\Requests\UpdateTopicsRequest;
+use App\Http\Requests\UpdateYearsRequest;
+use App\Http\Resources\YearResource;
 
-class TopicsController extends APIBaseController
+class YearsController extends APIBaseController
 {
     public function __construct()
     {
@@ -21,8 +21,9 @@ class TopicsController extends APIBaseController
      */
     public function index()
     {
-        $years = Year::all();
-        return $this->sendResponse($years);
+        $faculty_id = request()->faculty_id;
+        $years = Year::when($faculty_id, function($q)use($faculty_id){return $q->where('faculty_id', $faculty_id);})->get();
+        return $this->sendResponse(YearResource::collection($years));
     }
 
     /**
@@ -38,14 +39,14 @@ class TopicsController extends APIBaseController
     /**
      * Store a newly created Year in storage.
      *
-     * @param  \App\Http\Requests\StoreTopicsRequest  $request
+     * @param  \App\Http\Requests\UpdateYearsRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreTopicsRequest $request)
+    public function store(UpdateYearsRequest $request)
     {
-        Year::create($request->all());
+        $year = Year::create($request->validated());
 
-        return redirect()->route('years.index');
+        return $this->sendResponse(new YearResource($year));
     }
 
 
@@ -65,16 +66,16 @@ class TopicsController extends APIBaseController
     /**
      * Update Year in storage.
      *
-     * @param  \App\Http\Requests\UpdateTopicsRequest  $request
+     * @param  \App\Http\Requests\UpdateYearsRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateTopicsRequest $request, $id)
+    public function update(UpdateYearsRequest $request, $id)
     {
         $year = Year::findOrFail($id);
-        $year->update($request->all());
-
-        return redirect()->route('years.index');
+        $year->update($request->validated());
+        $year = Year::find($year->id);
+        return $this->sendResponse(new YearResource($year));
     }
 
 
@@ -87,8 +88,7 @@ class TopicsController extends APIBaseController
     public function show($id)
     {
         $year = Year::findOrFail($id);
-
-        return view('years.show', compact('year'));
+        return $this->sendResponse(new YearResource($year));
     }
 
 
@@ -102,8 +102,7 @@ class TopicsController extends APIBaseController
     {
         $year = Year::findOrFail($id);
         $year->delete();
-
-        return redirect()->route('years.index');
+        return $this->sendSuccess('success');
     }
 
     /**
@@ -119,6 +118,9 @@ class TopicsController extends APIBaseController
             foreach ($entries as $entry) {
                 $entry->delete();
             }
+
+            return $this->sendSuccess('success');
+
         }
     }
 

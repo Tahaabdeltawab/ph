@@ -21,8 +21,9 @@ class CreateUsersTable extends Migration
             $table->string('role')->nullable();
             $table->boolean('status')->nullable()->default(true);
             $table->string('password')->nullable();
-            $table->foreignId('faculty_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('year_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignId('university_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('faculty_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('year_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -23,8 +23,8 @@ class UpdateTopicsRequest extends FormRequest
     public function rules()
     {
         return [
-            
-            'title' => 'required',
+            'title' => 'required|string',
+            'year_id' => 'required|exists:years,id'
         ];
     }
 }

@@ -26,9 +26,13 @@ class Chapter extends Model
         return $this->belongsTo(Topic::class);
     }
 
-    public function questions()
+    public function definitions()
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany(Definition::class);
+    }
+    public function terms()
+    {
+        return $this->hasMany(Term::class);
     }
 
     public function tests()

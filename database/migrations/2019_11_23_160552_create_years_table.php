@@ -14,7 +14,7 @@ class CreateYearsTable extends Migration
     {
         Schema::create('years', function (Blueprint $table) {
             $table->id();
-            $table->integer('number');
+            $table->string('code');
             $table->string('title');
             $table->foreignId('faculty_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();

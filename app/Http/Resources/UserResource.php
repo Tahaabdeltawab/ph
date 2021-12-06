@@ -21,7 +21,12 @@ class UserResource extends JsonResource
             "phone" => $this->phone,
             "role" => $this->role,
             "status" => $this->status,
-            "token" => $this->userToken,
+            "university_id" => $this->university_id,
+            "faculty_id" => $this->faculty_id,
+            "year_id" => $this->year_id,
+            "university" => @$this->university->title,
+            "faculty" => @$this->faculty->title,
+            "year" => @$this->year->title,
         ];
         return $return;
     }

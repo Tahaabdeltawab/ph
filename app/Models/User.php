@@ -7,11 +7,12 @@ use Hash;
 use Mail;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Overtrue\LaravelFavorite\Traits\Favoriter;
 
 class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
-    use Notifiable, HasFactory;
+    use Notifiable, HasFactory, Favoriter;
 
-    protected $fillable = ['username', 'phone', 'email', 'password', 'remember_token', 'role', 'status'];
+    protected $fillable = ['username', 'phone', 'email', 'password', 'remember_token', 'role', 'status', 'university_id', 'faculty_id', 'year_id'];
 
     public static function boot()
     {
@@ -55,6 +56,10 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
         return $this->role == 'user';
     }
 
+    public function checkRole($role){
+        return $this->role == $role;
+    }
+
 
     public static $roles = [
         'admin',
@@ -62,10 +67,19 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
     ];
  
     
+    public function university(){
+        return $this->belongsTo(University::class);
+    }
+    public function faculty(){
+        return $this->belongsTo(Faculty::class);
+    }
+    public function year(){
+        return $this->belongsTo(Year::class);
+    }
 
-
-
-
+    public function mcq_results(){
+        return $this->hasMany(McqResult::class, 'user_id');
+    }
 
 
 

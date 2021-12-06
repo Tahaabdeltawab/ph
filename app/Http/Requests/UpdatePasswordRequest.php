@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateChaptersRequest extends FormRequest
+class UpdatePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +24,10 @@ class UpdateChaptersRequest extends FormRequest
      */
     public function rules()
     {
+        $old_password_required = auth()->user()->password ? 'required' : 'nullable';
         return [
-            'title' => 'required|string',
-            'topic_id' => 'required|exists:topics,id'
+            "old_password" => [$old_password_required, "string"],
+            "new_password" => ["required", "string", "min:8", "confirmed"],
         ];
     }
 }

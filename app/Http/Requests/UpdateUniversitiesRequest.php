@@ -3,7 +3,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateChaptersRequest extends FormRequest
+class UpdateUniversitiesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class UpdateChaptersRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'topic_id' => 'required|exists:topics,id'
+            'code' => 'required|string|unique:universities,code,'.$this->route('university'),
         ];
     }
 }

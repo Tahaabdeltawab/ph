@@ -3,7 +3,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateChaptersRequest extends FormRequest
+class UpdateTermsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,6 +24,8 @@ class UpdateChaptersRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
+            'definition_id' => 'required|exists:definitions,id',
+            'chapter_id' => 'required|exists:chapters,id',
             'topic_id' => 'required|exists:topics,id'
         ];
     }

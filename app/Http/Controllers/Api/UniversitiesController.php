@@ -4,7 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\Models\University;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreUniversitiesRequest;
+use App\Http\Requests\UpdateUniversitiesRequest;
+use App\Http\Resources\UniversityResource;
 
 class UniversitiesController extends APIBaseController
 {
@@ -20,8 +21,8 @@ class UniversitiesController extends APIBaseController
      */
     public function index()
     {
-        $us = University::all();
-        return $this->sendResponse($us);
+        $universities = University::all();
+        return $this->sendResponse(UniversityResource::collection($universities));
     }
 
     /**
@@ -37,14 +38,14 @@ class UniversitiesController extends APIBaseController
     /**
      * Store a newly created University in storage.
      *
-     * @param  \App\Http\Requests\StoreUniversitiesRequest  $request
+     * @param  \App\Http\Requests\UpdateUniversitiesRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreUniversitiesRequest $request)
+    public function store(UpdateUniversitiesRequest $request)
     {
-        $u = University::create($request->all());
+        $university = University::create($request->validated());
 
-        return $this->sendResponse($u);
+        return $this->sendResponse(new UniversityResource($university));
     }
 
 
@@ -68,12 +69,12 @@ class UniversitiesController extends APIBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(StoreUniversitiesRequest $request, $id)
+    public function update(UpdateUniversitiesRequest $request, $id)
     {
         $university = University::findOrFail($id);
-        $university->update($request->all());
-        $u = University::find($university->id);
-        return $this->sendResponse($u);
+        $university->update($request->validated());
+        $university = University::find($university->id);
+        return $this->sendResponse(new UniversityResource($university));
     }
 
 
@@ -85,8 +86,8 @@ class UniversitiesController extends APIBaseController
      */
     public function show($id)
     {
-        $u = University::findOrFail($id);
-        return $this->sendResponse($u);
+        $university = University::findOrFail($id);
+        return $this->sendResponse(new UniversityResource($university));
     }
 
 

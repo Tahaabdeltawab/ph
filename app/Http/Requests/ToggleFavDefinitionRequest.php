@@ -3,7 +3,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateChaptersRequest extends FormRequest
+class ToggleFavDefinitionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,7 @@ class UpdateChaptersRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string',
-            'topic_id' => 'required|exists:topics,id'
+            'definition_id' => 'required|exists:definitions,id',
         ];
     }
 }
