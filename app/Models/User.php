@@ -81,6 +81,10 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
         return $this->hasMany(McqResult::class, 'user_id');
     }
 
+    public function feedbacks(){
+        return $this->hasMany(Feedback::class);
+    }
+
 
 
     

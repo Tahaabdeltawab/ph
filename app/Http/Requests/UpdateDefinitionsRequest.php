@@ -24,7 +24,7 @@ class UpdateDefinitionsRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'term_title' => 'required|string',
+            'term' => 'required|string',
             'chapter_id' => 'required|exists:chapters,id',
             'topic_id' => 'required|exists:topics,id'
         ];

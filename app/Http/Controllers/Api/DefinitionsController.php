@@ -108,7 +108,7 @@ class DefinitionsController extends APIBaseController
             ]);
                     
             $definition->term()->create([
-                'title' => $request->term_title,
+                'title' => $request->term,
                 'chapter_id' => $request->chapter_id,
                 'topic_id' => $request->topic_id,
             ]);
@@ -155,7 +155,7 @@ class DefinitionsController extends APIBaseController
             ]);
                         
             $definition->term()->update([
-                'title' => $request->term_title,
+                'title' => $request->term,
                 'chapter_id' => $request->chapter_id,
                 'topic_id' => $request->topic_id,
             ]);

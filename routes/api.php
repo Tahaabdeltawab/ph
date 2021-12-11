@@ -6,13 +6,10 @@ use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Settings\PasswordController;
-use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\API\FeedbacksController;
 use App\Http\Resources\UserResource;
 
 // AUTHENTICATION
@@ -79,6 +76,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('save_mcq_results', [App\Http\Controllers\API\DefinitionsController::class, 'save_mcq_results']);
     Route::get('mcq_results', [App\Http\Controllers\API\DefinitionsController::class, 'mcq_results']);
     Route::delete('mcq_results/{id}', [App\Http\Controllers\API\DefinitionsController::class, 'destroy_mcq_results']);
+
+    Route::resource('feedbacks', FeedbacksController::class);
 });
 
 
