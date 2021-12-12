@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Exceptions\VerifyEmailException;
-use App\Http\Controllers\API\APIBaseController;
+use App\Http\Controllers\Api\APIBaseController;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;

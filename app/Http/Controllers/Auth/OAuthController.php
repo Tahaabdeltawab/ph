@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Exceptions\EmailTakenException;
-use App\Http\Controllers\API\APIBaseController;
+use App\Http\Controllers\Api\APIBaseController;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\City;

@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Route;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\API\FeedbacksController;
+use App\Http\Controllers\Api\FeedbacksController;
 use App\Http\Resources\UserResource;
 
 // AUTHENTICATION
@@ -31,8 +31,8 @@ Route::get('oauth/{driver}/deletion_callback', [OAuthController::class, 'handleD
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/user', function (Request $request) {return new UserResource($request->user());});
     Route::post('logout', [LoginController::class, 'logout']);
-    Route::put('users/update_profile', [App\Http\Controllers\API\UsersController::class, 'updateProfile'])->name('users.update_profile');
-    Route::put('users/update_password', [App\Http\Controllers\API\UsersController::class, 'updatePassword'])->name('users.update_password');
+    Route::put('users/update_profile', [App\Http\Controllers\Api\UsersController::class, 'updateProfile'])->name('users.update_profile');
+    Route::put('users/update_password', [App\Http\Controllers\Api\UsersController::class, 'updatePassword'])->name('users.update_password');
 });
 // AUTHENTICATION
 
@@ -41,41 +41,41 @@ Route::group(['middleware' => 'auth'], function () {
 Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->group(function () {
         Route::middleware(['role:admin'])->group(function () {
-            Route::resource('users', App\Http\Controllers\API\UsersController::class);
-            Route::post('users_mass_destroy', [App\Http\Controllers\API\UsersController::class, 'massDestroy'])->name('users.mass_destroy');
-            Route::resource('universities', App\Http\Controllers\API\UniversitiesController::class);
-            Route::post('universities_mass_destroy', [App\Http\Controllers\API\UniversitiesController::class, 'massDestroy'])->name('universities.mass_destroy');
-            Route::resource('faculties', App\Http\Controllers\API\FacultiesController::class);
-            Route::post('faculties_mass_destroy', [App\Http\Controllers\API\FacultiesController::class, 'massDestroy'])->name('faculties.mass_destroy');
-            Route::resource('years', App\Http\Controllers\API\YearsController::class);
-            Route::post('years_mass_destroy', [App\Http\Controllers\API\YearsController::class, 'massDestroy'])->name('years.mass_destroy');
-            Route::resource('topics', App\Http\Controllers\API\TopicsController::class);
-            Route::post('topics_mass_destroy', [App\Http\Controllers\API\TopicsController::class, 'massDestroy'])->name('topics.mass_destroy');
-            Route::resource('tests', App\Http\Controllers\API\TestsController::class);
-            Route::resource('roles', App\Http\Controllers\API\RolesController::class);
-            Route::post('roles_mass_destroy', [App\Http\Controllers\API\RolesController::class, 'massDestroy'])->name('roles.mass_destroy');
-            Route::resource('user_actions', App\Http\Controllers\API\UserActionsController::class);
-            Route::resource('chapters', App\Http\Controllers\API\ChaptersController::class);
-            Route::post('chapters_mass_destroy', [App\Http\Controllers\API\ChaptersController::class, 'massDestroy'])->name('chapters.mass_destroy');
-            Route::resource('definitions', App\Http\Controllers\API\DefinitionsController::class);
-            Route::post('definitions_mass_destroy', [App\Http\Controllers\API\DefinitionsController::class, 'massDestroy'])->name('definitions.mass_destroy');
-            Route::resource('terms', App\Http\Controllers\API\TermsController::class);
-            Route::post('terms_mass_destroy', [App\Http\Controllers\API\TermsController::class, 'massDestroy'])->name('terms.mass_destroy');
-            Route::resource('results', App\Http\Controllers\API\ResultsController::class);
-            Route::post('results_mass_destroy', [App\Http\Controllers\API\ResultsController::class, 'massDestroy'])->name('results.mass_destroy');
+            Route::resource('users', App\Http\Controllers\Api\UsersController::class);
+            Route::post('users_mass_destroy', [App\Http\Controllers\Api\UsersController::class, 'massDestroy'])->name('users.mass_destroy');
+            Route::resource('universities', App\Http\Controllers\Api\UniversitiesController::class);
+            Route::post('universities_mass_destroy', [App\Http\Controllers\Api\UniversitiesController::class, 'massDestroy'])->name('universities.mass_destroy');
+            Route::resource('faculties', App\Http\Controllers\Api\FacultiesController::class);
+            Route::post('faculties_mass_destroy', [App\Http\Controllers\Api\FacultiesController::class, 'massDestroy'])->name('faculties.mass_destroy');
+            Route::resource('years', App\Http\Controllers\Api\YearsController::class);
+            Route::post('years_mass_destroy', [App\Http\Controllers\Api\YearsController::class, 'massDestroy'])->name('years.mass_destroy');
+            Route::resource('topics', App\Http\Controllers\Api\TopicsController::class);
+            Route::post('topics_mass_destroy', [App\Http\Controllers\Api\TopicsController::class, 'massDestroy'])->name('topics.mass_destroy');
+            Route::resource('tests', App\Http\Controllers\Api\TestsController::class);
+            Route::resource('roles', App\Http\Controllers\Api\RolesController::class);
+            Route::post('roles_mass_destroy', [App\Http\Controllers\Api\RolesController::class, 'massDestroy'])->name('roles.mass_destroy');
+            Route::resource('user_actions', App\Http\Controllers\Api\UserActionsController::class);
+            Route::resource('chapters', App\Http\Controllers\Api\ChaptersController::class);
+            Route::post('chapters_mass_destroy', [App\Http\Controllers\Api\ChaptersController::class, 'massDestroy'])->name('chapters.mass_destroy');
+            Route::resource('definitions', App\Http\Controllers\Api\DefinitionsController::class);
+            Route::post('definitions_mass_destroy', [App\Http\Controllers\Api\DefinitionsController::class, 'massDestroy'])->name('definitions.mass_destroy');
+            Route::resource('terms', App\Http\Controllers\Api\TermsController::class);
+            Route::post('terms_mass_destroy', [App\Http\Controllers\Api\TermsController::class, 'massDestroy'])->name('terms.mass_destroy');
+            Route::resource('results', App\Http\Controllers\Api\ResultsController::class);
+            Route::post('results_mass_destroy', [App\Http\Controllers\Api\ResultsController::class, 'massDestroy'])->name('results.mass_destroy');
         });
 
         // Used in Practice
-        Route::get('topics', [App\Http\Controllers\API\TopicsController::class, 'index']);
-        Route::get('chapters', [App\Http\Controllers\API\ChaptersController::class, 'index']);
-        Route::get('definitions', [App\Http\Controllers\API\DefinitionsController::class, 'index']);
+        Route::get('topics', [App\Http\Controllers\Api\TopicsController::class, 'index']);
+        Route::get('chapters', [App\Http\Controllers\Api\ChaptersController::class, 'index']);
+        Route::get('definitions', [App\Http\Controllers\Api\DefinitionsController::class, 'index']);
     });
 
-    Route::post('change_definition_level', [App\Http\Controllers\API\DefinitionsController::class, 'change_definition_level']);
-    Route::post('toggle_fav', [App\Http\Controllers\API\DefinitionsController::class, 'toggle_fav']);
-    Route::post('save_mcq_results', [App\Http\Controllers\API\DefinitionsController::class, 'save_mcq_results']);
-    Route::get('mcq_results', [App\Http\Controllers\API\DefinitionsController::class, 'mcq_results']);
-    Route::delete('mcq_results/{id}', [App\Http\Controllers\API\DefinitionsController::class, 'destroy_mcq_results']);
+    Route::post('change_definition_level', [App\Http\Controllers\Api\DefinitionsController::class, 'change_definition_level']);
+    Route::post('toggle_fav', [App\Http\Controllers\Api\DefinitionsController::class, 'toggle_fav']);
+    Route::post('save_mcq_results', [App\Http\Controllers\Api\DefinitionsController::class, 'save_mcq_results']);
+    Route::get('mcq_results', [App\Http\Controllers\Api\DefinitionsController::class, 'mcq_results']);
+    Route::delete('mcq_results/{id}', [App\Http\Controllers\Api\DefinitionsController::class, 'destroy_mcq_results']);
 
     Route::resource('feedbacks', FeedbacksController::class);
 });
@@ -83,7 +83,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Routes does not need authentication as they are used in registration 
 Route::prefix('admin')->group(function () {
-    Route::get('universities', [App\Http\Controllers\API\UniversitiesController::class, 'index']);
-    Route::get('faculties', [App\Http\Controllers\API\FacultiesController::class, 'index']);
-    Route::get('years', [App\Http\Controllers\API\YearsController::class, 'index']);
+    Route::get('universities', [App\Http\Controllers\Api\UniversitiesController::class, 'index']);
+    Route::get('faculties', [App\Http\Controllers\Api\FacultiesController::class, 'index']);
+    Route::get('years', [App\Http\Controllers\Api\YearsController::class, 'index']);
 });

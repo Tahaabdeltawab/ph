@@ -18,7 +18,7 @@ class RoleMiddleware
     {
         if( ! auth()->user()->checkRole($role) )
         // abort(403);
-        return app('\App\Http\Controllers\API\APIBaseController')->sendError('Unauthorized', 403);
+        return app('\App\Http\Controllers\Api\APIBaseController')->sendError('Unauthorized', 403);
 
         return $next($request);
     }
