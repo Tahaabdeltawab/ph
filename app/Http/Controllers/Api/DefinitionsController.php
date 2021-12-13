@@ -70,6 +70,8 @@ class DefinitionsController extends APIBaseController
 
     public function mcq_results()
     {
+        if(auth()->user()->checkRole('admin') && request()->all)
+        return $this->sendResponse(McqResultResource::collection(McqResult::all()));
         return $this->sendResponse(McqResultResource::collection(auth()->user()->mcq_results));
     }
 

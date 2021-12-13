@@ -17,6 +17,7 @@ class McqResultResource extends JsonResource
         $return = [
             "id" => $this->id,
             'user_id' => $this->user_id,
+            'user' => $this->user->username,
             'topic_id' => $this->topic_id,
             'topic' => $this->topic->title,
             'chapter_id' => $this->chapter_id,
