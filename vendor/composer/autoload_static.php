@@ -89,6 +89,9 @@ class ComposerStaticInit35be4f16e899f9a34b3275c148a57fd4
             'Symfony\\Component\\ErrorHandler\\' => 31,
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
+            'Spatie\\Translatable\\' => 20,
+            'Spatie\\Tags\\' => 12,
+            'Spatie\\EloquentSortable\\' => 24,
         ),
         'R' => 
         array (
@@ -335,6 +338,18 @@ class ComposerStaticInit35be4f16e899f9a34b3275c148a57fd4
         'Symfony\\Component\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
+        ),
+        'Spatie\\Translatable\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/laravel-translatable/src',
+        ),
+        'Spatie\\Tags\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/laravel-tags/src',
+        ),
+        'Spatie\\EloquentSortable\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/eloquent-sortable/src',
         ),
         'Ramsey\\Uuid\\' => 
         array (
@@ -712,15 +727,20 @@ class ComposerStaticInit35be4f16e899f9a34b3275c148a57fd4
         'App\\Http\\Requests\\UpdateUsersRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateUsersRequest.php',
         'App\\Http\\Requests\\UpdateYearsRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateYearsRequest.php',
         'App\\Http\\Resources\\ChapterResource' => __DIR__ . '/../..' . '/app/Http/Resources/ChapterResource.php',
+        'App\\Http\\Resources\\ChapterWithDefinitionsResource' => __DIR__ . '/../..' . '/app/Http/Resources/ChapterWithDefinitionsResource.php',
         'App\\Http\\Resources\\DefinitionResource' => __DIR__ . '/../..' . '/app/Http/Resources/DefinitionResource.php',
         'App\\Http\\Resources\\FacultyResource' => __DIR__ . '/../..' . '/app/Http/Resources/FacultyResource.php',
+        'App\\Http\\Resources\\FacultyWithYearsResource' => __DIR__ . '/../..' . '/app/Http/Resources/FacultyWithYearsResource.php',
         'App\\Http\\Resources\\FeedbackResource' => __DIR__ . '/../..' . '/app/Http/Resources/FeedbackResource.php',
         'App\\Http\\Resources\\McqResultResource' => __DIR__ . '/../..' . '/app/Http/Resources/McqResultResource.php',
         'App\\Http\\Resources\\TermResource' => __DIR__ . '/../..' . '/app/Http/Resources/TermResource.php',
         'App\\Http\\Resources\\TopicResource' => __DIR__ . '/../..' . '/app/Http/Resources/TopicResource.php',
+        'App\\Http\\Resources\\TopicWithChaptersResource' => __DIR__ . '/../..' . '/app/Http/Resources/TopicWithChaptersResource.php',
         'App\\Http\\Resources\\UniversityResource' => __DIR__ . '/../..' . '/app/Http/Resources/UniversityResource.php',
+        'App\\Http\\Resources\\UniversityWithFacultiesResource' => __DIR__ . '/../..' . '/app/Http/Resources/UniversityWithFacultiesResource.php',
         'App\\Http\\Resources\\UserResource' => __DIR__ . '/../..' . '/app/Http/Resources/UserResource.php',
         'App\\Http\\Resources\\YearResource' => __DIR__ . '/../..' . '/app/Http/Resources/YearResource.php',
+        'App\\Http\\Resources\\YearWithTopicsResource' => __DIR__ . '/../..' . '/app/Http/Resources/YearWithTopicsResource.php',
         'App\\Models\\Chapter' => __DIR__ . '/../..' . '/app/Models/Chapter.php',
         'App\\Models\\Definition' => __DIR__ . '/../..' . '/app/Models/Definition.php',
         'App\\Models\\DefinitionLevel' => __DIR__ . '/../..' . '/app/Models/DefinitionLevel.php',
@@ -5786,6 +5806,17 @@ class ComposerStaticInit35be4f16e899f9a34b3275c148a57fd4
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'Spatie\\EloquentSortable\\EloquentSortableServiceProvider' => __DIR__ . '/..' . '/spatie/eloquent-sortable/src/EloquentSortableServiceProvider.php',
+        'Spatie\\EloquentSortable\\Sortable' => __DIR__ . '/..' . '/spatie/eloquent-sortable/src/Sortable.php',
+        'Spatie\\EloquentSortable\\SortableTrait' => __DIR__ . '/..' . '/spatie/eloquent-sortable/src/SortableTrait.php',
+        'Spatie\\Tags\\HasSlug' => __DIR__ . '/..' . '/spatie/laravel-tags/src/HasSlug.php',
+        'Spatie\\Tags\\HasTags' => __DIR__ . '/..' . '/spatie/laravel-tags/src/HasTags.php',
+        'Spatie\\Tags\\Tag' => __DIR__ . '/..' . '/spatie/laravel-tags/src/Tag.php',
+        'Spatie\\Tags\\TagsServiceProvider' => __DIR__ . '/..' . '/spatie/laravel-tags/src/TagsServiceProvider.php',
+        'Spatie\\Translatable\\Events\\TranslationHasBeenSet' => __DIR__ . '/..' . '/spatie/laravel-translatable/src/Events/TranslationHasBeenSet.php',
+        'Spatie\\Translatable\\Exceptions\\AttributeIsNotTranslatable' => __DIR__ . '/..' . '/spatie/laravel-translatable/src/Exceptions/AttributeIsNotTranslatable.php',
+        'Spatie\\Translatable\\HasTranslations' => __DIR__ . '/..' . '/spatie/laravel-translatable/src/HasTranslations.php',
+        'Spatie\\Translatable\\TranslatableServiceProvider' => __DIR__ . '/..' . '/spatie/laravel-translatable/src/TranslatableServiceProvider.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'Symfony\\Component\\Console\\Application' => __DIR__ . '/..' . '/symfony/console/Application.php',
         'Symfony\\Component\\Console\\Attribute\\AsCommand' => __DIR__ . '/..' . '/symfony/console/Attribute/AsCommand.php',

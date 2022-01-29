@@ -6,6 +6,7 @@ use App\Models\Faculty;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateFacultiesRequest;
 use App\Http\Resources\FacultyResource;
+use App\Http\Resources\FacultyWithYearsResource;
 
 class FacultiesController extends APIBaseController
 {
@@ -88,7 +89,7 @@ class FacultiesController extends APIBaseController
     public function show($id)
     {
         $faculty = Faculty::findOrFail($id);
-        return $this->sendResponse(new FacultyResource($faculty));
+        return $this->sendResponse(new FacultyWithYearsResource($faculty));
     }
 
 

@@ -6,6 +6,7 @@ use App\Models\Year;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateYearsRequest;
 use App\Http\Resources\YearResource;
+use App\Http\Resources\YearWithTopicsResource;
 
 class YearsController extends APIBaseController
 {
@@ -88,7 +89,7 @@ class YearsController extends APIBaseController
     public function show($id)
     {
         $year = Year::findOrFail($id);
-        return $this->sendResponse(new YearResource($year));
+        return $this->sendResponse(new YearWithTopicsResource($year));
     }
 
 

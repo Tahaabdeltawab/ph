@@ -6,6 +6,7 @@ use App\Models\Topic;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateTopicsRequest;
 use App\Http\Resources\TopicResource;
+use App\Http\Resources\TopicWithChaptersResource;
 
 class TopicsController extends APIBaseController
 {
@@ -88,7 +89,7 @@ class TopicsController extends APIBaseController
     public function show($id)
     {
         $topic = Topic::findOrFail($id);
-        return $this->sendResponse(new TopicResource($topic));
+        return $this->sendResponse(new TopicWithChaptersResource($topic));
     }
 
 

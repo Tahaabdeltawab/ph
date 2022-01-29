@@ -51,7 +51,6 @@ Route::middleware(['auth'])->group(function () {
             Route::post('years_mass_destroy', [App\Http\Controllers\Api\YearsController::class, 'massDestroy'])->name('years.mass_destroy');
             Route::resource('topics', App\Http\Controllers\Api\TopicsController::class);
             Route::post('topics_mass_destroy', [App\Http\Controllers\Api\TopicsController::class, 'massDestroy'])->name('topics.mass_destroy');
-            Route::resource('tests', App\Http\Controllers\Api\TestsController::class);
             Route::resource('roles', App\Http\Controllers\Api\RolesController::class);
             Route::post('roles_mass_destroy', [App\Http\Controllers\Api\RolesController::class, 'massDestroy'])->name('roles.mass_destroy');
             Route::resource('user_actions', App\Http\Controllers\Api\UserActionsController::class);
@@ -61,8 +60,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('definitions_mass_destroy', [App\Http\Controllers\Api\DefinitionsController::class, 'massDestroy'])->name('definitions.mass_destroy');
             Route::resource('terms', App\Http\Controllers\Api\TermsController::class);
             Route::post('terms_mass_destroy', [App\Http\Controllers\Api\TermsController::class, 'massDestroy'])->name('terms.mass_destroy');
-            Route::resource('results', App\Http\Controllers\Api\ResultsController::class);
-            Route::post('results_mass_destroy', [App\Http\Controllers\Api\ResultsController::class, 'massDestroy'])->name('results.mass_destroy');
+            Route::resource('tags', App\Http\Controllers\Api\TagsController::class);
+            Route::post('tags_mass_destroy', [App\Http\Controllers\Api\TagsController::class, 'massDestroy'])->name('tags.mass_destroy');
         });
 
         // Used in Practice

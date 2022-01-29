@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 */
 class Chapter extends Model
 {
-
+    use \Spatie\Tags\HasTags;
+    
     protected $fillable = ['title', 'topic_id'];
 
     public static function boot()

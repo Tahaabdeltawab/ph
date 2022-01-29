@@ -6,7 +6,7 @@ use Overtrue\LaravelFavorite\Traits\Favoriteable;
 
 class Definition extends Model
 {
-    use Favoriteable;
+    use Favoriteable, \Spatie\Tags\HasTags;
     
     protected $fillable = ['title', 'topic_id', 'chapter_id'];
 

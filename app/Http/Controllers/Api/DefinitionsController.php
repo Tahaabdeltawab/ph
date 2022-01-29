@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UpdateDefinitionsRequest;
 use App\Http\Resources\DefinitionResource;
 use App\Http\Resources\McqResultResource;
+use App\Models\Chapter;
 use App\Models\DefinitionLevel;
 use App\Models\McqResult;
 use Illuminate\Support\Facades\DB;
@@ -114,16 +115,20 @@ class DefinitionsController extends APIBaseController
                 'chapter_id' => $request->chapter_id,
                 'topic_id' => $request->topic_id,
             ]);
+
+            Chapter::find($definition->chapter_id)->attachTags($request->tags);
+            $definition->syncTags($request->tags);
+            
             DB::commit();
             return $this->sendResponse(new DefinitionResource($definition));
         } catch (\Throwable $th) {
             DB::rollBack();
+            return $this->sendError($th->getMessage());
         }
 
 
 
     }
-
 
     /**
      * Show the form for editing Definition.
@@ -161,6 +166,10 @@ class DefinitionsController extends APIBaseController
                 'chapter_id' => $request->chapter_id,
                 'topic_id' => $request->topic_id,
             ]);
+            
+            Chapter::find($definition->chapter_id)->attachTags($request->tags);
+            $definition->syncTags($request->tags);
+            
             $definition = Definition::find($definition->id);
             DB::commit();
             return $this->sendResponse(new DefinitionResource($definition));

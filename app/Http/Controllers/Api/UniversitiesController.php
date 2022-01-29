@@ -6,6 +6,7 @@ use App\Models\University;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateUniversitiesRequest;
 use App\Http\Resources\UniversityResource;
+use App\Http\Resources\UniversityWithFacultiesResource;
 
 class UniversitiesController extends APIBaseController
 {
@@ -87,7 +88,7 @@ class UniversitiesController extends APIBaseController
     public function show($id)
     {
         $university = University::findOrFail($id);
-        return $this->sendResponse(new UniversityResource($university));
+        return $this->sendResponse(new UniversityWithFacultiesResource($university));
     }
 
 

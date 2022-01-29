@@ -6,6 +6,7 @@ use App\Models\Chapter;
 use Illuminate\Http\Request;
 use App\Http\Requests\UpdateChaptersRequest;
 use App\Http\Resources\ChapterResource;
+use App\Http\Resources\ChapterWithDefinitionsResource;
 
 class ChaptersController extends APIBaseController
 {
@@ -49,7 +50,6 @@ class ChaptersController extends APIBaseController
         return $this->sendResponse(new ChapterResource($chapter));
     }
 
-
     /**
      * Show the form for editing Chapter.
      *
@@ -87,8 +87,8 @@ class ChaptersController extends APIBaseController
      */
     public function show($id)
     {
-        $chapter = Chapter::findOrFail($id);
-        return $this->sendResponse(new ChapterResource($chapter));
+        $chapter = Chapter::with('definitions')->findOrFail($id);
+        return $this->sendResponse(new ChapterWithDefinitionsResource($chapter));
     }
 
 

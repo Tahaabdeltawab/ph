@@ -30,6 +30,7 @@ class DefinitionResource extends JsonResource
             'term_id' => $this->term->id,
             'term' => $this->term->title,
             'terms' => $terms,
+            'tags' => collect($this->tags)->pluck('name'),
         ];
         return $return;
     }
