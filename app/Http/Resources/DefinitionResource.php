@@ -14,7 +14,7 @@ class DefinitionResource extends JsonResource
      */
     public function toArray($request)
     {   
-        $terms = $this->terms->prepend($this->term)->map(function($term, $key){
+        $mcq_terms = $this->mcq_terms->prepend($this->term)->map(function($term, $key){
             return ['label' => $term->title, 'value' => $term->id, 'color' => 'amber'];
         })->shuffle();
         
@@ -23,14 +23,18 @@ class DefinitionResource extends JsonResource
             "fav" => $this->hasBeenFavoritedBy(auth()->user()),
             "level" => @$this->user_level->level,
             "title" => $this->title,
+            "explanation" => $this->explanation,
+            "reversible" => $this->reversible,
+            "automcquable" => $this->automcquable,
             'topic_id' => $this->topic_id,
             'topic' => $this->topic->title,
             'chapter_id' => $this->chapter_id,
             'chapter' => $this->chapter->title,
-            'term_id' => $this->term->id,
-            'term' => $this->term->title,
-            'terms' => $terms,
-            'tags' => collect($this->tags)->pluck('name'),
+            'term_id' => $this->term->id, // used to evaluate mcq option is correct or not (in case the definition has only one term)
+            'terms_ids' => $this->terms->pluck('id'),
+            'terms' => $this->terms->pluck('title'),
+            'mcq_terms' => $mcq_terms,
+            'tags' => collect($this->tags)->pluck('name', 'id'),
         ];
         return $return;
     }

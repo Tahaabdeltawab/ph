@@ -24,9 +24,13 @@ class UpdateDefinitionsRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'term' => 'required|string',
+            'terms' => 'required|array',
+            'tags' => 'nullable|array',
             'chapter_id' => 'required|exists:chapters,id',
-            'topic_id' => 'required|exists:topics,id'
+            'topic_id' => 'required|exists:topics,id',
+            'reversible' => 'nullable|boolean',
+            'automcquable' => 'nullable|boolean',
+            'explanation' => 'nullable',
         ];
     }
 }

@@ -17,6 +17,9 @@ class CreateDefinitionsTable extends Migration
             $table->foreignId('topic_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('chapter_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('title')->nullable();
+            $table->boolean('reversible')->default(1)->nullable();
+            $table->boolean('automcquable')->default(1)->nullable();
+            $table->longText('explanation')->nullable();
             $table->timestamps();
         });
     }

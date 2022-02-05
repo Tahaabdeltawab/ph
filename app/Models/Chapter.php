@@ -33,11 +33,6 @@ class Chapter extends Model
     }
     public function terms()
     {
-        return $this->hasMany(Term::class);
-    }
-
-    public function tests()
-    {
-        return $this->hasMany(Test::class);
+        return $this->hasManyThrough(Term::class, Definition::class);
     }
 }

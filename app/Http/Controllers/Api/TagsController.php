@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use \Spatie\Tags\Tag;
 use App\Http\Requests\UpdateTagsRequest;
 use App\Http\Resources\TagResource;
+use App\Models\Chapter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TagsController extends APIBaseController
 {
@@ -28,15 +30,26 @@ class TagsController extends APIBaseController
 
     public function store(UpdateTagsRequest $request)
     {
-        $tag = Tag::create($request->validated());
-        return $this->sendResponse(new TagResource($tag));
+        try {
+            DB::beginTransaction();
+            $tag = Tag::create(['name' => $request->title]);
+            if($request->chapter_id){
+               $chapter = Chapter::find($request->chapter_id);
+               $chapter->attachTag($tag);
+            }
+            DB::commit();
+            return $this->sendResponse(new TagResource($tag));
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $this->sendError($th->getMessage());
+        }
     }
 
 
     public function update(UpdateTagsRequest $request, $id)
     {
         $tag = Tag::findOrFail($id);
-        $tag->update($request->validated());
+        $tag->update(['name' => $request->title]);
         $tag = Tag::find($tag->id);
         return $this->sendResponse(new TagResource($tag));
     }

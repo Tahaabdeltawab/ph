@@ -25,8 +25,6 @@ class UpdateTermsRequest extends FormRequest
         return [
             'title' => 'required|string',
             'definition_id' => 'required|exists:definitions,id',
-            'chapter_id' => 'required|exists:chapters,id',
-            'topic_id' => 'required|exists:topics,id'
         ];
     }
 }

@@ -13,6 +13,7 @@ use App\Http\Resources\McqResultResource;
 use App\Models\Chapter;
 use App\Models\DefinitionLevel;
 use App\Models\McqResult;
+use App\Models\Term;
 use Illuminate\Support\Facades\DB;
 
 class DefinitionsController extends APIBaseController
@@ -31,8 +32,10 @@ class DefinitionsController extends APIBaseController
     {
         $topic_id = request()->topic_id;
         $chapter_id = request()->chapter_id;
+        $practiceMode = request()->practiceMode;
         $definitions = Definition::when($chapter_id, function($q)use($chapter_id){return $q->where('chapter_id', $chapter_id);})
                                  ->when($topic_id, function($q)use($topic_id){return $q->where('topic_id', $topic_id);})
+                                 ->when($practiceMode == 'MCQ', function($q)use($practiceMode){return $q->where('automcquable', true);})
                                  ->get();
         return $this->sendResponse(DefinitionResource::collection($definitions));
     }
@@ -83,17 +86,6 @@ class DefinitionsController extends APIBaseController
         return $this->sendSuccess('Deleted successfully');
     }
 
-
-    /**
-     * Show the form for creating new Definition.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('definitions.create');
-    }
-
     /**
      * Store a newly created Definition in storage.
      *
@@ -108,13 +100,16 @@ class DefinitionsController extends APIBaseController
                 'title' => $request->title,
                 'chapter_id' => $request->chapter_id,
                 'topic_id' => $request->topic_id,
+                'reversible' => $request->reversible,
+                'automcquable' => $request->automcquable,
+                'explanation' => $request->explanation,
             ]);
-                    
-            $definition->term()->create([
-                'title' => $request->term,
-                'chapter_id' => $request->chapter_id,
-                'topic_id' => $request->topic_id,
-            ]);
+
+            $data = collect($request->terms)->mapWithKeys(function ($item, $key) use ($definition) {
+                return [$key =>['title' => $item, 'definition_id' => $definition->id]];
+            })->toArray();
+           
+            Term::upsert($data, [],['title', 'definition_id']);
 
             Chapter::find($definition->chapter_id)->attachTags($request->tags);
             $definition->syncTags($request->tags);
@@ -123,6 +118,7 @@ class DefinitionsController extends APIBaseController
             return $this->sendResponse(new DefinitionResource($definition));
         } catch (\Throwable $th) {
             DB::rollBack();
+            throw $th;
             return $this->sendError($th->getMessage());
         }
 
@@ -130,18 +126,6 @@ class DefinitionsController extends APIBaseController
 
     }
 
-    /**
-     * Show the form for editing Definition.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $definition = Definition::findOrFail($id);
-
-        return view('definitions.edit', compact('definition'));
-    }
 
     /**
      * Update Definition in storage.
@@ -159,13 +143,17 @@ class DefinitionsController extends APIBaseController
                 'title' => $request->title,
                 'chapter_id' => $request->chapter_id,
                 'topic_id' => $request->topic_id,
+                'reversible' => $request->reversible,
+                'automcquable' => $request->automcquable,
+                'explanation' => $request->explanation,
             ]);
-                        
-            $definition->term()->update([
-                'title' => $request->term,
-                'chapter_id' => $request->chapter_id,
-                'topic_id' => $request->topic_id,
-            ]);
+         
+
+            $definition->terms()->delete();
+            $data = collect($request->terms)->mapWithKeys(function ($item, $key) use ($definition) {
+                return [$key =>['title' => $item, 'definition_id' => $definition->id]];
+            })->toArray();
+            Term::upsert($data, [],['title', 'definition_id']);
             
             Chapter::find($definition->chapter_id)->attachTags($request->tags);
             $definition->syncTags($request->tags);
@@ -175,6 +163,7 @@ class DefinitionsController extends APIBaseController
             return $this->sendResponse(new DefinitionResource($definition));
         } catch (\Throwable $th) {
             DB::rollBack();
+            return $this->sendError($th->getMessage());
         }
     }
 
@@ -201,7 +190,7 @@ class DefinitionsController extends APIBaseController
     public function destroy($id)
     {
         $definition = Definition::findOrFail($id);
-        $definition->term()->delete();
+        $definition->terms()->delete();
         $definition->delete();
         return $this->sendSuccess('success');
     }

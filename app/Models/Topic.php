@@ -32,16 +32,11 @@ class Topic extends Model
     }
     public function terms()
     {
-        return $this->hasMany(Term::class);
+        return $this->hasManyThrough(Term::class, Definition::class);
     }
     
     public function chapters()
     {
         return $this->hasMany(Chapter::class);
-    }
-
-    public function tests()
-    {
-        return $this->hasMany(Test::class);
     }
 }

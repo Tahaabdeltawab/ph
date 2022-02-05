@@ -19,10 +19,10 @@ class TermResource extends JsonResource
             "title" => $this->title,
             'definition_id' => $this->definition_id,
             'definition' => $this->definition->title,
-            'topic_id' => $this->topic_id,
-            'topic' => $this->topic->title,
-            'chapter_id' => $this->chapter_id,
-            'chapter' => $this->chapter->title,
+            'topic_id' => $this->definition->topic_id,
+            'topic' => $this->definition->topic->title,
+            'chapter_id' => $this->definition->chapter_id,
+            'chapter' => $this->definition->chapter->title,
         ];
         return $return;
     }

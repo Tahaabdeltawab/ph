@@ -8,7 +8,7 @@ class Definition extends Model
 {
     use Favoriteable, \Spatie\Tags\HasTags;
     
-    protected $fillable = ['title', 'topic_id', 'chapter_id'];
+    protected $fillable = ['title', 'topic_id', 'chapter_id', 'reversible', 'automcquable', 'explanation'];
 
     public static function boot()
     {
@@ -18,14 +18,23 @@ class Definition extends Model
     }
 
     /**
-     * Set to null if empty
-     * @param $input
+     * Getters & Setters
      */
-    public function setTopicIdAttribute($input)
+
+    public function setExplanationAttribute($input)
     {
-        $this->attributes['topic_id'] = $input ? $input : null;
+        $this->attributes['explanation'] = htmlentities($input);
     }
 
+    public function getExplanationAttribute($input)
+    {
+        return html_entity_decode($input);
+    }
+
+    
+    /**
+     * Relations
+     */
     public function topic()
     {
         return $this->belongsTo(Topic::class);
@@ -36,15 +45,34 @@ class Definition extends Model
         return $this->belongsTo(Chapter::class);
     }
 
+    public function terms()
+    {
+        return $this->hasMany(Term::class);
+    }
+
+    // used to evaluate mcq option is correct or not
     public function term()
     {
         return $this->hasOne(Term::class);
     }
 
-    // terms options for mcq
-    public function terms() 
+    // terms options for auto mcq
+    public function mcq_terms() 
     {
-        return $this->chapter->terms()->where('id', '!=', $this->term->id)->inRandomOrder()->limit(3);
+        return $this->chapter->terms()
+        ->where(
+            function($q)
+            {
+                $q->whereHas('definition', function($qu)
+                    {
+                        return $qu->where('automcquable', true);
+                    }
+                );
+            }
+        )
+        ->where('terms.id', '!=', $this->term->id)
+        ->inRandomOrder()
+        ->limit(3);
     }
 
     public function user_level(){

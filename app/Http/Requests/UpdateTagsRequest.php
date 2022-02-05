@@ -3,7 +3,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUniversitiesRequest extends FormRequest
+class UpdateTagsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,8 @@ class UpdateUniversitiesRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|unique:tags,name,'.$this->route('tag'),
+            'title' => 'required|string|unique:tags,name,'.$this->route('tag'),
+            'chapter_id' => 'nullable|exists:chapters,id'
         ];
     }
 }
