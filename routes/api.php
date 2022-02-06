@@ -62,6 +62,9 @@ Route::middleware(['auth'])->group(function () {
             Route::post('terms_mass_destroy', [App\Http\Controllers\Api\TermsController::class, 'massDestroy'])->name('terms.mass_destroy');
             Route::resource('tags', App\Http\Controllers\Api\TagsController::class);
             Route::post('tags_mass_destroy', [App\Http\Controllers\Api\TagsController::class, 'massDestroy'])->name('tags.mass_destroy');
+            // admin notifications
+            Route::resource('notifications', App\Http\Controllers\Api\NotificationsController::class);
+            Route::post('notifications_mass_destroy', [App\Http\Controllers\Api\NotificationsController::class, 'massDestroy'])->name('notifications.mass_destroy');
         });
 
         // Used in Practice
@@ -75,6 +78,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('save_mcq_results', [App\Http\Controllers\Api\DefinitionsController::class, 'save_mcq_results']);
     Route::get('mcq_results', [App\Http\Controllers\Api\DefinitionsController::class, 'mcq_results']);
     Route::delete('mcq_results/{id}', [App\Http\Controllers\Api\DefinitionsController::class, 'destroy_mcq_results']);
+   
+    //user notifications
+    Route::get('notifications', [App\Http\Controllers\Api\NotificationsController::class, 'get_notifications']);
+    Route::get('notifications/unseen_count', [App\Http\Controllers\Api\NotificationsController::class, 'unseen_count']);
+    Route::get('notifications/markAsRead/{notification}', [App\Http\Controllers\Api\NotificationsController::class, 'markAsRead']);
+    Route::get('notifications/markAsUnread/{notification}', [App\Http\Controllers\Api\NotificationsController::class, 'markAsUnread']);
 
     Route::resource('feedbacks', FeedbacksController::class);
 });

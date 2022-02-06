@@ -1,7 +1,7 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
+use App\Traits\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Hash;
 use Mail;
@@ -155,20 +155,6 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
     public function getJWTCustomClaims()
     {
         return [];
-    }
-
-    public static function rules(){
-        return [
-            'username' => 'required|unique:users',
-            'phone_user' => 'unique:users,phone|numeric|min:7|regex:/(0)[0-9]{9}/',
-            'email' => 'unique:users|regex:/(.+)@(.+)\.(.+)/i',
-            'password' => 'required|confirmed|min:6'
-        ];
-    }
-    
-    public function notifications()
-    {
-        return $this->belongsToMany(Notification::class, 'user_notifications');
     }
 
 
