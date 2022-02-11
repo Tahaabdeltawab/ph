@@ -22,9 +22,11 @@ class UpdateRolesRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->role ?? null;
         return [
-            
-            'title' => 'required',
+            'name' => 'required|max:200|unique:roles,name,'.$id,
+            'display_name' => 'nullable|max:200',
+            'description' => 'nullable|max:200',
         ];
     }
 }

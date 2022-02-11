@@ -12,7 +12,10 @@ class ChaptersController extends APIBaseController
 {
     public function __construct()
     {
-        //$this->middleware('admin');
+        $this->middleware('permission:create-chapters')->only(['store']);
+        $this->middleware('permission:update-chapters')->only(['update']);
+        $this->middleware('permission:delete-chapters')->only(['destroy']);
+        $this->middleware('permission:show-chapters')->only(['show', 'index']);
     }
 
     /**

@@ -11,7 +11,10 @@ class FeedbacksController extends APIBaseController
 {
     public function __construct()
     {
-        //$this->middleware('admin');
+        $this->middleware('permission:create-feedbacks')->only(['store']);
+        $this->middleware('permission:update-feedbacks')->only(['update']);
+        $this->middleware('permission:delete-feedbacks')->only(['destroy']);
+        $this->middleware('permission:show-feedbacks')->only(['show', 'index']);
     }
 
     /**
@@ -21,7 +24,7 @@ class FeedbacksController extends APIBaseController
      */
     public function index()
     {
-        $feedbacks = auth()->user()->checkRole('admin') ? Feedback::all() : auth()->user()->feedbacks;
+        $feedbacks = Feedback::all();
         return $this->sendResponse(FeedbackResource::collection($feedbacks));
     }
 

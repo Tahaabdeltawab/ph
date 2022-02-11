@@ -12,7 +12,10 @@ class YearsController extends APIBaseController
 {
     public function __construct()
     {
-        //$this->middleware('admin');
+        $this->middleware('permission:create-years')->only(['store']);
+        $this->middleware('permission:update-years')->only(['update']);
+        $this->middleware('permission:delete-years')->only(['destroy']);
+        $this->middleware('permission:show-years')->only(['show', 'index']);
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Api\APIBaseController;
 use App\Http\Resources\UserResource;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -64,16 +65,28 @@ class RegisterController extends APIBaseController
      */
     protected function create(array $data): User
     {
-        return User::create([
-            'username' => $data['username'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-            'university_id' => $data['university_id'],
-            'faculty_id' => $data['faculty_id'],
-            'year_id' => $data['year_id'],
-            'role' => 'user',
-            'status' => true,
-            'password' => bcrypt($data['password']),
-        ]);
+        try{
+            DB::beginTransaction();
+            $user = User::create([
+                'username' => $data['username'],
+                'email' => $data['email'],
+                'phone' => $data['phone'],
+                'university_id' => $data['university_id'],
+                'faculty_id' => $data['faculty_id'],
+                'year_id' => $data['year_id'],
+                'status' => true,
+                'password' => bcrypt($data['password']),
+            ]);
+            
+            $user_role = Role::where('name', 'user')->first();
+            if($user_role)
+            $user->attachRole($user_role);
+
+            DB::commit();
+            return $user;
+        }catch(\Throwable $th){
+            DB::rollBack();
+            return $this->sendError($th->getMessage(), 500);
+        }
     }
 }

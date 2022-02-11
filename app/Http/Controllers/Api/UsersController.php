@@ -10,14 +10,17 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UpdateUsersRequest;
 use App\Http\Resources\NotificationResource;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UsersController extends APIBaseController
 {
     public function __construct()
     {
-        // $this->middleware('auth');
-        // $this->middleware('admin');
+        $this->middleware('permission:create-users')->only(['store']);
+        $this->middleware('permission:update-users')->only(['update']);
+        $this->middleware('permission:delete-users')->only(['destroy']);
+        $this->middleware('permission:show-users')->only(['show', 'index']);
     }
 
     public function index()
@@ -31,33 +34,50 @@ class UsersController extends APIBaseController
 
     public function store(UpdateUsersRequest $request)
     {
-        $user = User::create($request->validated());
-
-        return $this->sendResponse( new UserResource( $user ), 'created successfully' );
+        try{
+            DB::beginTransaction();
+            $user = User::create($request->validated());
+            if(isset($request->rolesIds) && ! empty($request->rolesIds))
+                $role->syncRoles($request->rolesIds);
+            DB::commit();
+            return $this->sendResponse( new UserResource( $user ), 'created successfully' );
+        }catch(\Throwable $th){
+            DB::rollBack();
+            return $this->sendError($th->getMessage(), 500);
+        }
         
     }
 
     public function update(UpdateUsersRequest $request, $id)
     {
-        $user = User::findOrFail($id);
+        try{
+            DB::beginTransaction();
+            $user = User::findOrFail($id);
 
-          $to_save = [
-          'username' => $request->username,
-          'email' => $request->email,
-          'phone' => $request->phone,
-          'university_id' => $request->university_id,
-          'faculty_id' => $request->faculty_id,
-          'year_id' => $request->year_id,
-          'role' => $request->role,
-          'status' => $request->status,
-          ];
+            $to_save = [
+            'username' => $request->username,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'university_id' => $request->university_id,
+            'faculty_id' => $request->faculty_id,
+            'year_id' => $request->year_id,
+            'status' => $request->status,
+            ];
 
-          if($request->password && ! empty($request->password))
-          $to_save['password'] = $request->password;
+            if(isset($request->rolesIds))
+                $user->syncRoles($request->rolesIds);
+            
+            if($request->password && ! empty($request->password))
+                $to_save['password'] = $request->password;
 
 
-        $user->update($to_save);
-        return $this->sendResponse( new UserResource( User::find($id) ), 'updated successfully' );
+            $user->update($to_save);
+            DB::commit();
+            return $this->sendResponse( new UserResource( User::find($id) ), 'updated successfully' );
+        }catch(\Throwable $th){
+            DB::rollBack();
+            return $this->sendError($th->getMessage(), 500);
+        }
     }
 
     public function updateProfile(UpdateProfileRequest $request)

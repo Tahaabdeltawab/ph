@@ -12,7 +12,10 @@ class FacultiesController extends APIBaseController
 {
     public function __construct()
     {
-        //$this->middleware('admin');
+        $this->middleware('permission:create-faculties')->only(['store']);
+        $this->middleware('permission:update-faculties')->only(['update']);
+        $this->middleware('permission:delete-faculties')->only(['destroy']);
+        $this->middleware('permission:show-faculties')->only(['show', 'index']);
     }
 
     /**

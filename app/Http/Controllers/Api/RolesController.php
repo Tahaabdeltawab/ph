@@ -2,124 +2,101 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Role;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreRolesRequest;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UpdateRolesRequest;
+use App\Http\Resources\RoleResource;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class RolesController extends APIBaseController
 {
+
     public function __construct()
     {
-        //$this->middleware('admin');
+        $this->middleware('permission:create-roles')->only(['store']);
+        $this->middleware('permission:update-roles')->only(['update']);
+        $this->middleware('permission:delete-roles')->only(['destroy']);
+        $this->middleware('permission:show-roles')->only(['show', 'index']);
     }
-    /**
-     * Display a listing of Role.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
-    {
-        $roles = Role::all();
-
-        return view('roles.index', compact('roles'));
-    }
-
-    /**
-     * Show the form for creating new Role.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('roles.create');
-    }
-
-    /**
-     * Store a newly created Role in storage.
-     *
-     * @param  \App\Http\Requests\StoreRolesRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreRolesRequest $request)
-    {
-        Role::create($request->all());
-
-        return redirect()->route('roles.index');
-    }
-
-
-    /**
-     * Show the form for editing Role.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $role = Role::findOrFail($id);
-
-        return view('roles.edit', compact('role'));
-    }
-
-    /**
-     * Update Role in storage.
-     *
-     * @param  \App\Http\Requests\UpdateRolesRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateRolesRequest $request, $id)
-    {
-        $role = Role::findOrFail($id);
-        $role->update($request->all());
-
-        return redirect()->route('roles.index');
-    }
-
-
-    /**
-     * Display Role.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $role = Role::findOrFail($id);
-
-        return view('roles.show', compact('role'));
-    }
-
-
-    /**
-     * Remove Role from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $role = Role::findOrFail($id);
-        $role->delete();
-
-        return redirect()->route('roles.index');
-    }
-
-    /**
-     * Delete all selected Role at once.
-     *
-     * @param Request $request
-     */
-    public function massDestroy(Request $request)
-    {
-        if ($request->input('ids')) {
-            $entries = Role::whereIn('id', $request->input('ids'))->get();
-
-            foreach ($entries as $entry) {
-                $entry->delete();
-            }
+    {   try{
+            if(request()->type == 'options')
+            $roles = Role::select(['id', 'name'])->get()->pluck('name', 'id');
+            else
+            $roles = RoleResource::collection(Role::all());
+            return $this->sendResponse($roles);
+        }catch(\Throwable $th){
+            return $this->sendError($th->getMessage(), 500);
         }
+    }
+
+    public function store(UpdateRolesRequest $request)
+    {
+        try{
+            DB::beginTransaction();
+            $role = Role::create([
+                'name'          => $request->name,
+                'display_name'  => $request->display_name,
+                'description'   => $request->description,
+            ]);
+
+            if(isset($request->permissionsIds) && ! empty($request->permissionsIds))
+                $role->syncPermissions($request->permissionsIds);
+            DB::commit();
+            return $this->sendResponse(new RoleResource($role), 'Role created successfully');
+        }catch(\Throwable $th){
+            DB::rollBack();
+            return $this->sendError($th->getMessage(), 500);
+        }
+
+    }
+
+    public function update(int $id, UpdateRolesRequest $request)
+    {
+        try{
+            DB::beginTransaction();
+            $role = Role::findOrFail($id);
+            $role->update([
+                'name'          => $request->name,
+                'display_name'  => $request->display_name,
+                'description'   => $request->description,
+            ]);
+
+            if (isset($request->permissionsIds))
+                $role->syncPermissions($request->permissionsIds);
+
+            DB::commit();
+            return $this->sendResponse(new RoleResource(Role::find($id)), 'Role updated successfully');
+        }catch(\Throwable $th){
+            DB::rollBack();
+            return $this->sendError($th->getMessage(), 500);
+        }
+    }
+
+    public function show(int $id)
+    {
+        try{
+            $role = Role::findOrFail($id);
+                return $this->sendResponse(new RoleResource($role), 'Role retrived successfully');
+        }catch(\Throwable $th){
+            return $this->sendError($th->getMessage(), 500);
+        }
+
+    }
+
+    public function destroy(int $id)
+    {
+        try{
+            $role = Role::findOrFail($id);
+                $role->delete();
+            return $this->sendResponse(new RoleResource($role), 'Role deleted successfully');
+        }catch(\Throwable $th){
+            return $this->sendError($th->getMessage(), 500);
+        }
+
     }
 
 }

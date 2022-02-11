@@ -30,7 +30,6 @@ class UpdateUsersRequest extends FormRequest
             'username' => 'required',
             'email' => 'required|email|unique:users,email,'.$this->route('user'),
             'phone' => 'required|unique:users,phone,'.$this->route('user'),
-            'role' => ['required', Rule::in(User::$roles)],
             'status' => ['required', 'boolean'],
             "password" => "$passwordRequired|string|min:8",
             'university_id' => 'required|integer|exists:universities,id',

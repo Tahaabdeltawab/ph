@@ -40,31 +40,25 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->group(function () {
-        Route::middleware(['role:admin'])->group(function () {
+        Route::middleware([/* 'role:admin' */])->group(function () {
             Route::resource('users', App\Http\Controllers\Api\UsersController::class);
-            Route::post('users_mass_destroy', [App\Http\Controllers\Api\UsersController::class, 'massDestroy'])->name('users.mass_destroy');
-            Route::resource('universities', App\Http\Controllers\Api\UniversitiesController::class);
-            Route::post('universities_mass_destroy', [App\Http\Controllers\Api\UniversitiesController::class, 'massDestroy'])->name('universities.mass_destroy');
-            Route::resource('faculties', App\Http\Controllers\Api\FacultiesController::class);
-            Route::post('faculties_mass_destroy', [App\Http\Controllers\Api\FacultiesController::class, 'massDestroy'])->name('faculties.mass_destroy');
-            Route::resource('years', App\Http\Controllers\Api\YearsController::class);
-            Route::post('years_mass_destroy', [App\Http\Controllers\Api\YearsController::class, 'massDestroy'])->name('years.mass_destroy');
-            Route::resource('topics', App\Http\Controllers\Api\TopicsController::class);
-            Route::post('topics_mass_destroy', [App\Http\Controllers\Api\TopicsController::class, 'massDestroy'])->name('topics.mass_destroy');
+            // roles & permissions            
             Route::resource('roles', App\Http\Controllers\Api\RolesController::class);
-            Route::post('roles_mass_destroy', [App\Http\Controllers\Api\RolesController::class, 'massDestroy'])->name('roles.mass_destroy');
+            Route::resource('permissions', App\Http\Controllers\Api\PermissionsController::class);
+            // study
+            Route::resource('universities', App\Http\Controllers\Api\UniversitiesController::class);
+            Route::resource('faculties', App\Http\Controllers\Api\FacultiesController::class);
+            Route::resource('years', App\Http\Controllers\Api\YearsController::class);
+            Route::resource('topics', App\Http\Controllers\Api\TopicsController::class);
+            Route::resource('roles', App\Http\Controllers\Api\RolesController::class);
             Route::resource('user_actions', App\Http\Controllers\Api\UserActionsController::class);
             Route::resource('chapters', App\Http\Controllers\Api\ChaptersController::class);
-            Route::post('chapters_mass_destroy', [App\Http\Controllers\Api\ChaptersController::class, 'massDestroy'])->name('chapters.mass_destroy');
             Route::resource('definitions', App\Http\Controllers\Api\DefinitionsController::class);
-            Route::post('definitions_mass_destroy', [App\Http\Controllers\Api\DefinitionsController::class, 'massDestroy'])->name('definitions.mass_destroy');
             Route::resource('terms', App\Http\Controllers\Api\TermsController::class);
-            Route::post('terms_mass_destroy', [App\Http\Controllers\Api\TermsController::class, 'massDestroy'])->name('terms.mass_destroy');
             Route::resource('tags', App\Http\Controllers\Api\TagsController::class);
-            Route::post('tags_mass_destroy', [App\Http\Controllers\Api\TagsController::class, 'massDestroy'])->name('tags.mass_destroy');
             // admin notifications
             Route::resource('notifications', App\Http\Controllers\Api\NotificationsController::class);
-            Route::post('notifications_mass_destroy', [App\Http\Controllers\Api\NotificationsController::class, 'massDestroy'])->name('notifications.mass_destroy');
+
         });
 
         // Used in Practice

@@ -30,6 +30,7 @@ class UpdateDefinitionsRequest extends FormRequest
             'topic_id' => 'required|exists:topics,id',
             'reversible' => 'nullable|boolean',
             'automcquable' => 'nullable|boolean',
+            'custommcquable' => 'nullable|boolean',
             'explanation' => 'nullable',
         ];
     }

@@ -12,7 +12,10 @@ class TopicsController extends APIBaseController
 {
     public function __construct()
     {
-        //$this->middleware('admin');
+        $this->middleware('permission:create-topics')->only(['store']);
+        $this->middleware('permission:update-topics')->only(['update']);
+        $this->middleware('permission:delete-topics')->only(['destroy']);
+        $this->middleware('permission:show-topics')->only(['show', 'index']);
     }
 
     /**

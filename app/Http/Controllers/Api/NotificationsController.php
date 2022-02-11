@@ -11,7 +11,13 @@ use App\Notifications\CustomNotification;
 
 class NotificationsController extends APIBaseController
 {
-    public function __construct(){}
+    public function __construct()
+    {
+        $this->middleware('permission:create-notifications')->only(['store']);
+        $this->middleware('permission:update-notifications')->only(['update']);
+        $this->middleware('permission:delete-notifications')->only(['destroy']);
+        $this->middleware('permission:show-notifications')->only(['show', 'index']);
+    }
     
     
     // admin

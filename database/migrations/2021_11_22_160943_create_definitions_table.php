@@ -19,6 +19,7 @@ class CreateDefinitionsTable extends Migration
             $table->string('title')->nullable();
             $table->boolean('reversible')->default(1)->nullable();
             $table->boolean('automcquable')->default(1)->nullable();
+            $table->boolean('custommcquable')->default(0)->nullable();
             $table->longText('explanation')->nullable();
             $table->timestamps();
         });

@@ -16,6 +16,7 @@ class CreateTermsTable extends Migration
             $table->id();
             $table->foreignId('definition_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('title')->nullable();
+            $table->boolean('correct')->nullable();
             $table->timestamps();
         });
     }

@@ -8,11 +8,13 @@ use Mail;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Overtrue\LaravelFavorite\Traits\Favoriter;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
+    use LaratrustUserTrait;
     use Notifiable, HasFactory, Favoriter;
 
-    protected $fillable = ['username', 'phone', 'email', 'password', 'remember_token', 'role', 'status', 'university_id', 'faculty_id', 'year_id'];
+    protected $fillable = ['username', 'phone', 'email', 'password', 'remember_token', 'status', 'university_id', 'faculty_id', 'year_id'];
 
     public static function boot()
     {
@@ -40,32 +42,6 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
         return $q->where('status', false);
     }
 
-    public function scopeAdmin($q){
-        return $q->where('role', 'admin');
-    }
-
-    public function scopeUser($q){
-        return $q->where('role', 'user');
-    }
-
-    public function isAdmin(){
-        return $this->role == 'admin';
-    }
-
-    public function isUser(){
-        return $this->role == 'user';
-    }
-
-    public function checkRole($role){
-        return $this->role == $role;
-    }
-
-
-    public static $roles = [
-        'admin',
-        'user',
-    ];
- 
     
     public function university(){
         return $this->belongsTo(University::class);

@@ -20,7 +20,11 @@ class DefinitionsController extends APIBaseController
 {
     public function __construct()
     {
-        //$this->middleware('admin');
+        $this->middleware('permission:create-definitions')->only(['store']);
+        $this->middleware('permission:update-definitions')->only(['update']);
+        $this->middleware('permission:delete-definitions')->only(['destroy']);
+        $this->middleware('permission:show-definitions')->only(['show', 'index']);
+        $this->middleware('permission:delete-adminmcqresults')->only(['destroy_mcq_results']);
     }
 
     /**
@@ -35,7 +39,8 @@ class DefinitionsController extends APIBaseController
         $practiceMode = request()->practiceMode;
         $definitions = Definition::when($chapter_id, function($q)use($chapter_id){return $q->where('chapter_id', $chapter_id);})
                                  ->when($topic_id, function($q)use($topic_id){return $q->where('topic_id', $topic_id);})
-                                 ->when($practiceMode == 'MCQ', function($q)use($practiceMode){return $q->where('automcquable', true);})
+                                 ->when($practiceMode == 'MCQ', fn($q) => $q->mcquable())
+                                 ->when($practiceMode == 'Flashcard', fn($q) => $q->flashable())
                                  ->get();
         return $this->sendResponse(DefinitionResource::collection($definitions));
     }
@@ -74,7 +79,7 @@ class DefinitionsController extends APIBaseController
 
     public function mcq_results()
     {
-        if(auth()->user()->checkRole('admin') && request()->all)
+        if(auth()->user()->isAbleTo('show-adminmcqresults') && request()->all)
         return $this->sendResponse(McqResultResource::collection(McqResult::all()));
         return $this->sendResponse(McqResultResource::collection(auth()->user()->mcq_results));
     }
@@ -102,16 +107,20 @@ class DefinitionsController extends APIBaseController
                 'topic_id' => $request->topic_id,
                 'reversible' => $request->reversible,
                 'automcquable' => $request->automcquable,
+                'custommcquable' => $request->custommcquable,
                 'explanation' => $request->explanation,
             ]);
 
-            $data = collect($request->terms)->mapWithKeys(function ($item, $key) use ($definition) {
-                return [$key =>['title' => $item, 'definition_id' => $definition->id]];
+            $data = collect($request->terms)->mapWithKeys(function ($item, $key) use ($definition, $request) {
+                // if the definition is custom mcq so the terms are considered mcq options with the first term ($key == 0) is the correct option
+                return [$key =>['title' => $item, 'definition_id' => $definition->id, 'correct' => ($request->custommcquable ? ($key == 0 ? 1 : 0) : null)]];
             })->toArray();
            
-            Term::upsert($data, [],['title', 'definition_id']);
+            Term::upsert($data, [],['title', 'definition_id', 'correct']);
 
+            // add request tags to the chapter tags to choose among them in future created definitions
             Chapter::find($definition->chapter_id)->attachTags($request->tags);
+            // add the tags to the definition
             $definition->syncTags($request->tags);
             
             DB::commit();
@@ -145,15 +154,17 @@ class DefinitionsController extends APIBaseController
                 'topic_id' => $request->topic_id,
                 'reversible' => $request->reversible,
                 'automcquable' => $request->automcquable,
+                'custommcquable' => $request->custommcquable,
                 'explanation' => $request->explanation,
             ]);
          
-
+            // be careful in case of the term is linked to another table other than the definitions table
             $definition->terms()->delete();
-            $data = collect($request->terms)->mapWithKeys(function ($item, $key) use ($definition) {
-                return [$key =>['title' => $item, 'definition_id' => $definition->id]];
+            $data = collect($request->terms)->mapWithKeys(function ($item, $key) use ($definition, $request) {
+                // if the definition is custom mcq so the terms are considered mcq options with the first term ($key == 0) is the correct option
+                return [$key =>['title' => $item, 'definition_id' => $definition->id, 'correct' => ($request->custommcquable ? ($key == 0 ? 1 : 0) : null)]];
             })->toArray();
-            Term::upsert($data, [],['title', 'definition_id']);
+            Term::upsert($data, [],['title', 'definition_id', 'correct']);
             
             Chapter::find($definition->chapter_id)->attachTags($request->tags);
             $definition->syncTags($request->tags);
