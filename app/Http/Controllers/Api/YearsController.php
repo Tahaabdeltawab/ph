@@ -15,7 +15,7 @@ class YearsController extends APIBaseController
         $this->middleware('permission:create-years')->only(['store']);
         $this->middleware('permission:update-years')->only(['update']);
         $this->middleware('permission:delete-years')->only(['destroy']);
-        $this->middleware('permission:show-years')->only(['show', 'index']);
+        // $this->middleware('permission:show-years')->only(['show', 'index']); // used in registration
     }
 
     /**

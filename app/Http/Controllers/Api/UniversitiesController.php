@@ -15,7 +15,7 @@ class UniversitiesController extends APIBaseController
         $this->middleware('permission:create-universities')->only(['store']);
         $this->middleware('permission:update-universities')->only(['update']);
         $this->middleware('permission:delete-universities')->only(['destroy']);
-        $this->middleware('permission:show-universities')->only(['show', 'index']);
+        // $this->middleware('permission:show-universities')->only(['show', 'index']); // used in registration
     }
 
     /**

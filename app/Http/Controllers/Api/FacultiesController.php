@@ -15,7 +15,7 @@ class FacultiesController extends APIBaseController
         $this->middleware('permission:create-faculties')->only(['store']);
         $this->middleware('permission:update-faculties')->only(['update']);
         $this->middleware('permission:delete-faculties')->only(['destroy']);
-        $this->middleware('permission:show-faculties')->only(['show', 'index']);
+        // $this->middleware('permission:show-faculties')->only(['show', 'index']); // used in registration
     }
 
     /**
