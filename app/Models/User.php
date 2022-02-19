@@ -70,7 +70,7 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
      * @var array
      */
     // protected $appends = [
-    //     'photo_url',
+    //     'avatar',
     // ];
 
     /**
@@ -78,13 +78,12 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
      *
      * @return string
      */
-    /* public function getPhotoUrlAttribute()
+    public function getAvatarAttribute()
     {
-        return vsprintf('https://www.gravatar.com/avatar/%s.jpg?s=200&d=%s', [
-            md5(strtolower($this->email)),
-            $this->name ? urlencode("https://ui-avatars.com/api/$this->name") : 'mp',
-        ]);
-    } */
+        $nameArray = explode(' ', $this->username);
+        $username = count($nameArray) == 1 ? substr($nameArray[0], 0, 2) : substr($nameArray[0], 0, 1).substr($nameArray[1], 0, 1);
+        return vsprintf('https://www.gravatar.com/avatar/%s.jpg?s=200&d=%s', [md5(strtolower($this->email)), urlencode("https://ui-avatars.com/api/$username")]);
+    }
 
     /**
      * Get the oauth providers.

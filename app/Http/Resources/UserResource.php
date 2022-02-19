@@ -17,6 +17,7 @@ class UserResource extends JsonResource
         $return = [
             "id" => $this->id,
             "username" => $this->username,
+            "avatar" => $this->avatar,
             'email' => $this->email,
             "phone" => $this->phone,
             "roles" => $this->roles->pluck('name'),
