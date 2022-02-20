@@ -35,7 +35,7 @@ class Definition extends Model
      * Scopes
     */
     /**
-     * don't make flashable def with multi terms automcquable
+     * don't make flashable def with multi terms => automcquable
      * the definition may be viewed as flashcard or mcq or complete
      * if (definition has one term) the definition will be viewed as complete
      * if (custommcquable == 1) => so the definition will be viewed as mcq only 
@@ -65,7 +65,7 @@ class Definition extends Model
     }
     public function scopeCompletable($query)
     {
-        return $query->mcquable()->orWhere->onetermed();
+        return $query->onetermed(); //TODO add (or custommcquable) 
     }
 
 
