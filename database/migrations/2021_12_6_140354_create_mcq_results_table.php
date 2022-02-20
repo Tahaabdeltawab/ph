@@ -17,6 +17,7 @@ class CreateMcqResultsTable extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('chapter_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('topic_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('mode')->nullable();
             $table->double('score')->nullable();
             $table->text('data')->nullable();
             $table->timestamps();

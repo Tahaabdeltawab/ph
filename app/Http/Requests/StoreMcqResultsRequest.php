@@ -24,6 +24,7 @@ class StoreMcqResultsRequest extends FormRequest
     {
         return [
             'data' => 'required',
+            'mode' => 'required|in:MCQ,Complete',
             'score' => 'required|numeric',
             'chapter_id' => 'nullable|exists:chapters,id',
             'topic_id' => 'required|exists:topics,id'

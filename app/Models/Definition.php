@@ -35,11 +35,13 @@ class Definition extends Model
      * Scopes
     */
     /**
-     * the definition may be viewed as flashcard or mcq
+     * don't make flashable def with multi terms automcquable
+     * the definition may be viewed as flashcard or mcq or complete
+     * if (definition has one term) the definition will be viewed as complete
      * if (custommcquable == 1) => so the definition will be viewed as mcq only 
-     * if (custommcquable == 0) => flashable() => the definition will be viewed 
-     *      if (automcquable == 0) => as flashcard only 
-     *      if (automcquable == 1) => as flashcard and mcq
+     * elseif (custommcquable == 0) => flashable() => the definition will be viewed as 👇
+     *      if (automcquable == 0) => flashcard only 
+     *      if (automcquable == 1) => flashcard and mcq
      */
     public function scopeAutomcquable($query)
     {
@@ -53,9 +55,17 @@ class Definition extends Model
     {
         return $query->where('custommcquable', 0);
     }
+    public function scopeOnetermed($query)
+    {
+        return $query->withCount('terms')->having('terms_count', '=', 1);
+    }
     public function scopeMcquable($query)
     {
         return $query->automcquable()->orWhere->custommcquable();
+    }
+    public function scopeCompletable($query)
+    {
+        return $query->mcquable()->orWhere->onetermed();
     }
 
 

@@ -41,6 +41,7 @@ class DefinitionsController extends APIBaseController
                                  ->when($topic_id, function($q)use($topic_id){return $q->where('topic_id', $topic_id);})
                                  ->when($practiceMode == 'MCQ', fn($q) => $q->mcquable())
                                  ->when($practiceMode == 'Flashcard', fn($q) => $q->flashable())
+                                 ->when($practiceMode == 'Complete', fn($q) => $q->completable())
                                  ->get();
         return $this->sendResponse(DefinitionResource::collection($definitions));
     }
@@ -69,6 +70,7 @@ class DefinitionsController extends APIBaseController
             'user_id' => auth()->id(),
             'topic_id' => $request->topic_id,
             'chapter_id' => $request->chapter_id,
+            'mode' => $request->mode,
             'score' => $request->score,
             'data' => json_encode($request->data),
         ]);

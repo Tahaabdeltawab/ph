@@ -22,6 +22,7 @@ class McqResultResource extends JsonResource
             'topic' => $this->topic->title,
             'chapter_id' => $this->chapter_id,
             'chapter' => $this->chapter ? $this->chapter->title : 'All',
+            'mode' => $this->mode,
             'score' => $this->score,
             'data' => json_decode($this->data),
         ];

@@ -8,7 +8,7 @@ class McqResult extends Model
 {
 
     protected $table = 'mcq_results';
-    protected $fillable = ['user_id', 'chapter_id', 'topic_id', 'data', 'score'];
+    protected $fillable = ['user_id', 'chapter_id', 'topic_id', 'mode', 'data', 'score'];
 
     public static function boot()
     {
@@ -31,4 +31,12 @@ class McqResult extends Model
     {
         return $this->belongsTo(Topic::class);
     }
+
+    public function scopeMcq($q){
+        return $q->where('mode', 'MCQ');
+    }
+    public function scopeComplete($q){
+        return $q->where('mode', 'Complete');
+    }
+
 }
