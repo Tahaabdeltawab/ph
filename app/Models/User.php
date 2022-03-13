@@ -61,6 +61,29 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
         return $this->hasMany(Feedback::class);
     }
 
+    public function chapters(){
+        return $this->belongsToMany(Chapter::class)->withPivot('permission')->using(ChapterUser::class);
+    }
+
+    /**
+     **DB
+     *  ✅3️⃣ many to many relationship: when sharing, add row in chapter_user table (user_id, chapter_id, permissions(show,updateWithAdd,delete,create more defs)) 
+     *      permission: show,show-update,show-update-create,show-update-create-delete
+     *      users column in the chapters table with users ids
+     **WHERE TO USE
+     *  practice private
+     *      get topics 
+     *          created by user (visibility=0, topic_creator=auth())
+                contains chapters shared with user 
+                ✅3️⃣ $user_allowed_chapters = ChapterUser::where('user_id', auth()->id)->where('permission', 'show')->pluck('chapter_id')->toArray();
+                      Topic::whereHas('chapters', fn($q) => $q->whereIn('id', $user_allowed_chapters))
+                      
+     *      
+     *  practice public
+     *      get topics created by app admins (available for all)
+     * 
+     * 
+     */
 
 
     

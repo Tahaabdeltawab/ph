@@ -12,10 +12,12 @@ class TopicsController extends APIBaseController
 {
     public function __construct()
     {
-        $this->middleware('permission:create-topics')->only(['store']);
-        $this->middleware('permission:update-topics')->only(['update']);
-        $this->middleware('permission:delete-topics')->only(['destroy']);
-        $this->middleware('permission:show-topics')->only(['show', 'index']);
+        // $this->middleware('permission:create-topics')->only(['store']);
+        // $this->middleware('permission:update-topics')->only(['update']);
+        // $this->middleware('permission:delete-topics')->only(['destroy']);
+        // $this->middleware('permission:show-topics')->only(['show', 'index']);
+        
+        // commented because generic users can handle their own topics,chapters,definitions
     }
 
     /**
@@ -25,59 +27,35 @@ class TopicsController extends APIBaseController
      */
     public function index()
     {
-        $year_id = request()->year_id;
-        $topics = Topic::when($year_id, function($q)use($year_id){return $q->where('year_id', $year_id);})->get();
-        return $this->sendResponse(TopicResource::collection($topics));
+        // when year_id has a value => visibility is 1
+        $topics =  Topic::when(request()->year_id && request()->visibility == 1, fn($q) => $q->where('year_id', request()->year_id))
+                        ->when(request()->visibility == 0 && !request()->year_id , fn($q) => $q->where('user_id', auth()->id())->where('visibility', 0))
+                        ->when(request()->visibility == 1, fn($q) => $q->where('visibility', 1))
+                        ->get();
+
+        // for practice page request
+        $privateTopics = collect([]);
+        if(request()->year_id && request()->visibility == 0)
+        $privateTopics = Topic::where('user_id', auth()->id())->where('visibility', 0)->get();
+        $all = $privateTopics->merge($topics);
+        return $this->sendResponse(TopicResource::collection($all));
     }
 
-    /**
-     * Show the form for creating new Topic.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('topics.create');
-    }
-
-    /**
-     * Store a newly created Topic in storage.
-     *
-     * @param  \App\Http\Requests\UpdateTopicsRequest  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(UpdateTopicsRequest $request)
     {
-        $topic = Topic::create($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+        $topic = Topic::create($data);
 
         return $this->sendResponse(new TopicResource($topic));
     }
 
-
-    /**
-     * Show the form for editing Topic.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        $topic = Topic::findOrFail($id);
-
-        return view('topics.edit', compact('topic'));
-    }
-
-    /**
-     * Update Topic in storage.
-     *
-     * @param  \App\Http\Requests\UpdateTopicsRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdateTopicsRequest $request, $id)
     {
         $topic = Topic::findOrFail($id);
-        $topic->update($request->validated());
+        $data = $request->validated();
+        $data['user_id'] = auth()->id();
+        $topic->update($data);
         $topic = Topic::find($topic->id);
         return $this->sendResponse(new TopicResource($topic));
     }

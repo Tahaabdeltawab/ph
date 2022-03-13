@@ -15,6 +15,8 @@ class Chapter extends Model
     
     protected $fillable = ['title', 'topic_id'];
 
+    public static $common = ['chapters.id','chapters.title', 'chapters.topic_id'];
+
     public static function boot()
     {
         parent::boot();
@@ -25,6 +27,11 @@ class Chapter extends Model
     public function topic()
     {
         return $this->belongsTo(Topic::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class)->withPivot('permission')->using(ChapterUser::class);
     }
 
     public function definitions()

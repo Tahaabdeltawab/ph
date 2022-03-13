@@ -20,11 +20,15 @@ class DefinitionsController extends APIBaseController
 {
     public function __construct()
     {
-        $this->middleware('permission:create-definitions')->only(['store']);
-        $this->middleware('permission:update-definitions')->only(['update']);
-        $this->middleware('permission:delete-definitions')->only(['destroy']);
-        $this->middleware('permission:show-definitions')->only(['show', 'index']);
+        // $this->middleware('permission:create-definitions')->only(['store']);
+        // $this->middleware('permission:update-definitions')->only(['update']);
+        // $this->middleware('permission:delete-definitions')->only(['destroy']);
+        // $this->middleware('permission:show-definitions')->only(['show', 'index']);
+        
+        // commented because generic users can handle their own topics,chapters,definitions
+        
         $this->middleware('permission:delete-adminmcqresults')->only(['destroy_mcq_results']);
+
     }
 
     /**

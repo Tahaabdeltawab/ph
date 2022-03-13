@@ -17,6 +17,7 @@ class ChapterResource extends JsonResource
         $return = [
             "id" => $this->id,
             "title" => $this->title,
+            "permission" => $this->permission,
             'topic_id' => $this->topic_id,
             'topic' => $this->topic->title,
         ];

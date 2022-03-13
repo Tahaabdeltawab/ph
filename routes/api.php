@@ -72,6 +72,12 @@ Route::middleware(['auth'])->group(function () {
     Route::post('save_mcq_results', [App\Http\Controllers\Api\DefinitionsController::class, 'save_mcq_results']);
     Route::get('mcq_results', [App\Http\Controllers\Api\DefinitionsController::class, 'mcq_results']);
     Route::delete('mcq_results/{id}', [App\Http\Controllers\Api\DefinitionsController::class, 'destroy_mcq_results']);
+    // chapter share
+    Route::post('chapters/share', [App\Http\Controllers\Api\ChaptersController::class, 'share']);
+    Route::get('chapters/{id}/allowed_users', [App\Http\Controllers\Api\ChaptersController::class, 'get_allowed_users']);
+    Route::get('get_available_topics', [App\Http\Controllers\Api\ChaptersController::class, 'get_available_topics']);
+    Route::get('topics/{id}/available_chapters', [App\Http\Controllers\Api\ChaptersController::class, 'get_available_chapters']);
+    Route::get('users/options', [App\Http\Controllers\Api\UsersController::class, 'get_users_options']);
    
     //user notifications
     Route::get('notifications', [App\Http\Controllers\Api\NotificationsController::class, 'get_notifications']);

@@ -32,6 +32,12 @@ class UsersController extends APIBaseController
         return $this->sendResponse($users);
     }
 
+    public function get_users_options()
+    {
+        $users = DB::table('users')->select(['id', 'email', 'username'])->get();
+        return $this->sendResponse($users);
+    }
+
     public function store(UpdateUsersRequest $request)
     {
         try{

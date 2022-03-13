@@ -17,8 +17,11 @@ class TopicResource extends JsonResource
         $return = [
             "id" => $this->id,
             "title" => $this->title,
+            'visibility' => $this->visibility,
+            'user_id' => $this->user_id,
+            'user' => $this->user->username,
             'year_id' => $this->year_id,
-            'year' => $this->year->title,
+            'year' => $this->year ? $this->year->title : null,
         ];
         return $return;
     }
