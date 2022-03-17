@@ -15,6 +15,7 @@ class CreateChapterUserTable extends Migration
     {
         Schema::create('chapter_user', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('chapter_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('permission')->nullable();
         });
