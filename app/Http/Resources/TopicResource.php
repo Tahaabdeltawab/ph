@@ -19,7 +19,7 @@ class TopicResource extends JsonResource
             "title" => $this->title,
             'visibility' => $this->visibility,
             'user_id' => $this->user_id,
-            'user' => $this->user->username,
+            'user' => @$this->user->username,
             'year_id' => $this->year_id,
             'year' => $this->year ? $this->year->title : null,
         ];
