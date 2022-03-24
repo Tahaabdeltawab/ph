@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Exceptions\EmailTakenException;
 use App\Http\Controllers\Api\APIBaseController;
-use App\Models\Area;
-use App\Models\City;
 use App\Models\OAuthProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -89,13 +87,9 @@ class OAuthController extends APIBaseController
     {
         try{
             DB::beginTransaction();
-            $city   = City::first();
-            $area   = Area::where('city_id',$city->id)->first();
             $user   = User::create([
                 'username'  => $sUser->getName(),
                 'email'     => $sUser->getEmail(),
-                'city_id'   => $city->id,
-                'area_id'   => $area->id,
                 // 'email_verified_at' => now(),
             ]);
     
