@@ -24,7 +24,7 @@ class UpdateDefinitionLevelRequest extends FormRequest
     {
         return [
             'level' => 'required|in:easy,med,hard',
-            'definition_id' => 'required|exists:definitions,id',
+            'id' => 'required|exists:definitions,id',
         ];
     }
 }

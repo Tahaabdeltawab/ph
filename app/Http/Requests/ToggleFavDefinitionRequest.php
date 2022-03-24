@@ -23,7 +23,7 @@ class ToggleFavDefinitionRequest extends FormRequest
     public function rules()
     {
         return [
-            'definition_id' => 'required|exists:definitions,id',
+            'id' => 'required|exists:definitions,id',
         ];
     }
 }

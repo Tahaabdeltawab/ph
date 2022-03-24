@@ -53,16 +53,16 @@ class DefinitionsController extends APIBaseController
     public function change_definition_level(UpdateDefinitionLevelRequest $request)
     {
         $definition = DefinitionLevel::updateOrCreate(
-            ['definition_id' => $request->definition_id, 'user_id' => auth()->id()],
+            ['definition_id' => $request->id, 'user_id' => auth()->id()],
             ['level' => $request->level]
         );
 
-        return $this->sendResponse(new DefinitionResource(Definition::find($request->definition_id)), 'Updated successfully');
+        return $this->sendResponse(new DefinitionResource(Definition::find($request->id)), 'Updated successfully');
     }
 
     public function toggle_fav(ToggleFavDefinitionRequest $request)
     {
-        $definition = Definition::find($request->definition_id);
+        $definition = Definition::find($request->id);
         auth()->user()->toggleFavorite($definition);
         return $this->sendResponse(new DefinitionResource($definition), 'Updated successfully');
     }
