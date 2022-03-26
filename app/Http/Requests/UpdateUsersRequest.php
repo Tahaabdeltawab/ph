@@ -28,7 +28,7 @@ class UpdateUsersRequest extends FormRequest
         $passwordRequired = $type == 'create' ? 'required' : 'nullable';
         return [
             'username' => 'required',
-            'email' => 'required|email|unique:users,email,'.$this->route('user'),
+            'email' => 'nullable|email|unique:users,email,'.$this->route('user'),
             'status' => ['required', 'boolean'],
             "password" => "$passwordRequired|string|min:8",
         ];
