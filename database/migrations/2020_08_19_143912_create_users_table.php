@@ -16,7 +16,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('username');
-            $table->string('email')->nullable()->unique();
+            $table->string('email')->nullable();//unique(); not unique because in fb login there may be many users with null email
             $table->string('phone')->nullable()->unique();
             $table->boolean('status')->nullable()->default(true);
             $table->string('password')->nullable();
