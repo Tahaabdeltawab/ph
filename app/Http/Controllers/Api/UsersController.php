@@ -34,7 +34,7 @@ class UsersController extends APIBaseController
 
     public function get_users_options()
     {
-        $users = DB::table('users')->select(['id', 'email', 'username'])->get();
+        $users = User::select(['id', 'avatar', 'username'])->get();
         return $this->sendResponse($users);
     }
 
@@ -44,7 +44,7 @@ class UsersController extends APIBaseController
             DB::beginTransaction();
             $user = User::create($request->validated());
             if(isset($request->rolesIds) && ! empty($request->rolesIds))
-                $role->syncRoles($request->rolesIds);
+                $user->syncRoles($request->rolesIds);
             DB::commit();
             return $this->sendResponse( new UserResource( $user ), 'created successfully' );
         }catch(\Throwable $th){
@@ -63,10 +63,6 @@ class UsersController extends APIBaseController
             $to_save = [
             'username' => $request->username,
             'email' => $request->email,
-            'phone' => $request->phone,
-            'university_id' => $request->university_id,
-            'faculty_id' => $request->faculty_id,
-            'year_id' => $request->year_id,
             'status' => $request->status,
             ];
 
@@ -90,11 +86,6 @@ class UsersController extends APIBaseController
     {
           $to_save = [
           'username' => $request->username,
-          'email' => $request->email,
-          'phone' => $request->phone,
-          'university_id' => $request->university_id,
-          'faculty_id' => $request->faculty_id,
-          'year_id' => $request->year_id,
           ];
 
         auth()->user()->update($to_save);
@@ -115,17 +106,6 @@ class UsersController extends APIBaseController
         auth()->user()->save();
 
         return $this->sendSuccess(__('Password updated successfully'));
-    }
-
-    public function show($id)
-    {
-        $relations = [
-            'roles' => Role::get()->pluck('title', 'id')->prepend('Please select', ''),
-        ];
-
-        $user = User::findOrFail($id);
-
-        return view('users.show', compact('user') + $relations);
     }
 
     public function destroy($id)

@@ -78,6 +78,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('get_available_topics', [App\Http\Controllers\Api\ChaptersController::class, 'get_available_topics']);
     Route::get('topics/{id}/available_chapters', [App\Http\Controllers\Api\ChaptersController::class, 'get_available_chapters']);
     Route::get('users/options', [App\Http\Controllers\Api\UsersController::class, 'get_users_options']);
+
+    // mydatasets definitions
+    Route::get('chapters/{id}', [App\Http\Controllers\Api\ChaptersController::class, 'showMydatasetsDefinitions']);
    
     //user notifications
     Route::get('notifications', [App\Http\Controllers\Api\NotificationsController::class, 'get_notifications']);

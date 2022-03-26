@@ -35,7 +35,9 @@ class ChaptersController extends APIBaseController
     public function index()
     {
         $topic_id = request()->topic_id;
-        $chapters = Chapter::when($topic_id, function($q)use($topic_id){return $q->where('topic_id', $topic_id);})->get();
+        $chapters = Chapter::when($topic_id, function($q)use($topic_id){return $q->where('topic_id', $topic_id);}) // for admin and others
+        ->when(!$topic_id, fn($q) => $q->public()) // for admin
+        ->get();
         return $this->sendResponse(ChapterResource::collection($chapters));
     }
 
@@ -81,7 +83,7 @@ class ChaptersController extends APIBaseController
         ->where('chapter_user.chapter_id', $id)
         // added because don't want to show the chapter creator in the share dialog
         ->where('chapter_user.permission','!=', 'admin-show-update-create-delete')
-        ->select(['chapter_user.user_id', 'users.email', 'chapter_user.permission'])
+        ->select(['chapter_user.user_id', 'users.username', 'users.avatar', 'chapter_user.permission'])
         ->get();
         
         $data['chapter_id'] = $id;
@@ -131,20 +133,25 @@ class ChaptersController extends APIBaseController
         return $this->sendResponse(new ChapterResource($chapter));
     }
 
-
-    /**
-     * Display Chapter.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // admin show chapter definitions
     public function show($id)
+    {
+        $chapter = Chapter::with('definitions')
+        // ->join('chapter_user','chapter_user.chapter_id', '=', 'chapters.id')
+        // ->where('chapter_user.user_id', auth()->id())
+        ->select([...Chapter::$common])
+        ->find($id);
+        return $this->sendResponse(new ChapterWithDefinitionsResource($chapter));
+    }
+
+    // my datasets definitions
+    public function showMydatasetsDefinitions($id)
     {
         $chapter = Chapter::with('definitions')
         ->join('chapter_user','chapter_user.chapter_id', '=', 'chapters.id')
         ->where('chapter_user.user_id', auth()->id())
         ->select([...Chapter::$common, 'chapter_user.permission'])
-        ->findOrFail($id);
+        ->find($id);
         return $this->sendResponse(new ChapterWithDefinitionsResource($chapter));
     }
 

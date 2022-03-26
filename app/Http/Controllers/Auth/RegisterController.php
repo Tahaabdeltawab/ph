@@ -51,32 +51,33 @@ class RegisterController extends APIBaseController
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'username' => 'required|max:255',
+            'username' => 'nullable|max:255',
             'email' => 'required|email:filter|max:255|unique:users',
-            'phone' => 'required|max:255|unique:users',
-            'university_id' => 'required|integer|exists:universities,id',
-            'faculty_id' => 'required|integer|exists:faculties,id',
-            'year_id' => 'required|integer|exists:years,id',
             'password' => 'required|min:6',
+            // 'phone' => 'required|max:255|unique:users',
+            // 'university_id' => 'required|integer|exists:universities,id',
+            // 'faculty_id' => 'required|integer|exists:faculties,id',
+            // 'year_id' => 'required|integer|exists:years,id',
         ]);
     }
 
     /**
      * Create a new user instance after a valid registration.
      */
-    protected function create(array $data): User
+    protected function create(array $data)
     {
         try{
             DB::beginTransaction();
             $user = User::create([
-                'username' => $data['username'],
+                'username' => $data['username'], // ?: substr($data['email'],0,strpos($data['email'], '@')),
                 'email' => $data['email'],
-                'phone' => $data['phone'],
-                'university_id' => $data['university_id'],
-                'faculty_id' => $data['faculty_id'],
-                'year_id' => $data['year_id'],
+                'password' => isset($data['password']) ? bcrypt($data['password']) : null,
+                'avatar' => isset($data['avatar']) ?: null,
                 'status' => true,
-                'password' => bcrypt($data['password']),
+                // 'phone' => $data['phone'],
+                // 'university_id' => $data['university_id'],
+                // 'faculty_id' => $data['faculty_id'],
+                // 'year_id' => $data['year_id'],
             ]);
             
             $user_role = Role::where('name', 'user')->first();

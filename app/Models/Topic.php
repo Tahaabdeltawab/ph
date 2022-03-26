@@ -44,4 +44,12 @@ class Topic extends Model
     {
         return $this->hasMany(Chapter::class);
     }
+
+    public function scopePublic($q){
+        return $q->where('visibility', 1);
+    }
+
+    public function scopePrivate($q){
+        return $q->where('visibility', 0);
+    }
 }

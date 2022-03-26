@@ -42,4 +42,12 @@ class Chapter extends Model
     {
         return $this->hasManyThrough(Term::class, Definition::class);
     }
+
+    public function scopePublic($q){
+        return $q->whereHas('topic', fn($q) => $q->where('visibility', 1));
+    }
+
+    public function scopePrivate($q){
+        return $q->whereHas('topic', fn($q) => $q->where('visibility', 0));
+    }
 }

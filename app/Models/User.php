@@ -14,8 +14,9 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
     use LaratrustUserTrait;
     use Notifiable, HasFactory, Favoriter;
 
-    protected $fillable = ['username', 'phone', 'email', 'password', 'remember_token', 'status', 'university_id', 'faculty_id', 'year_id'];
-
+    protected $fillable = ['username',  'email', 'password', 'remember_token', 'status', 'avatar'];
+    protected $hidden = ['phone','university_id', 'faculty_id', 'year_id'];
+    
     public static function boot()
     {
         parent::boot();
@@ -103,9 +104,12 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
      */
     public function getAvatarAttribute()
     {
+        if($this->attributes['avatar'])
+        return $this->attributes['avatar'];
+
         $nameArray = explode(' ', $this->username);
         $username = count($nameArray) == 1 ? substr($nameArray[0], 0, 2) : substr($nameArray[0], 0, 1).substr($nameArray[1], 0, 1);
-        return vsprintf('https://www.gravatar.com/avatar/%s.jpg?s=200&d=%s', [md5(strtolower($this->email)), urlencode("https://ui-avatars.com/api/$username")]);
+        return vsprintf('https://www.gravatar.com/avatar/%s.jpg?s=200&d=%s', [md5(strtolower($this->id)), urlencode("https://ui-avatars.com/api/$username")]);
     }
 
     /**

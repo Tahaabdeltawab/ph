@@ -29,14 +29,14 @@ class TopicsController extends APIBaseController
     {
         // when year_id has a value => visibility is 1
         $topics =  Topic::when(request()->year_id && request()->visibility == 1, fn($q) => $q->where('year_id', request()->year_id))
-                        ->when(request()->visibility == 0 && !request()->year_id , fn($q) => $q->where('user_id', auth()->id())->where('visibility', 0))
-                        ->when(request()->visibility == 1, fn($q) => $q->where('visibility', 1))
+                        ->when(request()->visibility == 0 && !request()->year_id , fn($q) => $q->where('user_id', auth()->id())->private())
+                        ->when(request()->visibility == 1, fn($q) => $q->public())
                         ->get();
 
         // for practice page request
         $privateTopics = collect([]);
         if(request()->year_id && request()->visibility == 0)
-        $privateTopics = Topic::where('user_id', auth()->id())->where('visibility', 0)->get();
+        $privateTopics = Topic::where('user_id', auth()->id())->private()->get();
         $all = $privateTopics->merge($topics);
         return $this->sendResponse(TopicResource::collection($all));
     }

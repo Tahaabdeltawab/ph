@@ -19,16 +19,16 @@ class UserResource extends JsonResource
             "username" => $this->username,
             "avatar" => $this->avatar,
             'email' => $this->email,
-            "phone" => $this->phone,
             "roles" => $this->roles->pluck('name'),
             "permissions" => $this->allPermissions(['name'])->pluck('name'),
             "status" => $this->status,
-            "university_id" => $this->university_id,
-            "faculty_id" => $this->faculty_id,
-            "year_id" => $this->year_id,
-            "university" => @$this->university->title,
-            "faculty" => @$this->faculty->title,
-            "year" => @$this->year->title,
+            // "phone" => $this->phone,
+            // "university_id" => $this->university_id,
+            // "faculty_id" => $this->faculty_id,
+            // "year_id" => $this->year_id,
+            // "university" => @$this->university->title,
+            // "faculty" => @$this->faculty->title,
+            // "year" => @$this->year->title,
         ];
         return $return;
     }

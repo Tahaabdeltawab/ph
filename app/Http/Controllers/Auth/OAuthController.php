@@ -73,7 +73,10 @@ class OAuthController extends APIBaseController
 
         if ($dbUser = User::where('email', $sUser->getEmail())->first()) {
             // throw new EmailTakenException;
-            $dbUser->update(['username' => $sUser->getName()]);
+            $dbUser->update([
+                    'username' => $sUser->getName(), 
+                    'avatar' => $sUser->avatar . "&access_token={$sUser->token}"
+                ]);
             return $dbUser;
         }
 
@@ -87,9 +90,10 @@ class OAuthController extends APIBaseController
     {
         try{
             DB::beginTransaction();
-            $user   = User::create([
+            $user = app('\App\Http\Controllers\Auth\RegisterController')->create([
                 'username'  => $sUser->getName(),
                 'email'     => $sUser->getEmail(),
+                'avatar'    => $sUser->avatar . "&access_token={$sUser->token}"
                 // 'email_verified_at' => now(),
             ]);
     

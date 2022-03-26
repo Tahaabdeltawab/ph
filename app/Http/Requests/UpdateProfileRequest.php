@@ -26,11 +26,11 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             'username' => 'required',
-            'email' => 'required|email|unique:users,email,'.auth()->id(),
-            'phone' => 'required|unique:users,phone,'.auth()->id(),
-            'university_id' => 'required|integer|exists:universities,id',
-            'faculty_id' => 'required|integer|exists:faculties,id',
-            'year_id' => 'required|integer|exists:years,id',
+            // 'email' => 'nullable|email|unique:users,email,'.auth()->id(),
+            // 'phone' => 'nullable|unique:users,phone,'.auth()->id(),
+            // 'university_id' => 'nullable|integer|exists:universities,id',
+            // 'faculty_id' => 'nullable|integer|exists:faculties,id',
+            // 'year_id' => 'nullable|integer|exists:years,id',
         ];
     }
 }

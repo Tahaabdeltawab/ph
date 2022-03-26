@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('phone')->nullable()->unique();
             $table->boolean('status')->nullable()->default(true);
             $table->string('password')->nullable();
+            $table->string('avatar', 535)->nullable();
             $table->foreignId('university_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('faculty_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('year_id')->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
