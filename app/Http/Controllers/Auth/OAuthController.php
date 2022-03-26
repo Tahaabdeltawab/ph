@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Exceptions\EmailTakenException;
 use App\Http\Controllers\Api\APIBaseController;
 use App\Models\OAuthProvider;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -75,7 +76,7 @@ class OAuthController extends APIBaseController
             // throw new EmailTakenException;
             $dbUser->update([
                     'username' => $sUser->getName(), 
-                    'avatar' => $sUser->avatar . "&access_token={$sUser->token}"
+                    'avatar' => $provider == 'facebook' ? $sUser->avatar . "&access_token={$sUser->token}" : $sUser->getAvatar()
                 ]);
             return $dbUser;
         }
@@ -90,13 +91,18 @@ class OAuthController extends APIBaseController
     {
         try{
             DB::beginTransaction();
-            $user = app('\App\Http\Controllers\Auth\RegisterController')->create([
+            // register a user (from RegisterController)
+            $user = User::create([
                 'username'  => $sUser->getName(),
                 'email'     => $sUser->getEmail(),
-                'avatar'    => $sUser->avatar . "&access_token={$sUser->token}"
-                // 'email_verified_at' => now(),
+                'avatar'    => $provider == 'facebook' ? $sUser->avatar . "&access_token={$sUser->token}" : $sUser->getAvatar(),
+                'status' => true,
             ]);
-    
+            $user_role = Role::where('name', 'user')->first();
+            if($user_role)
+            $user->attachRole($user_role);
+            
+            // create oauthProviders 
             $user->oauthProviders()->create([
                 'provider' => $provider,
                 'provider_user_id' => $sUser->getId(),
