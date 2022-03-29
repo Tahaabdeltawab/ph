@@ -17,7 +17,6 @@ class UniversityWithFacultiesResource extends JsonResource
         $return = [
             "id" => $this->id,
             "title" => $this->title,
-            'code' => $this->code,
             'faculties' => FacultyResource::collection($this->faculties),
         ];
         return $return;

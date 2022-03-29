@@ -24,7 +24,6 @@ class UpdateUniversitiesRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'code' => 'required|string|unique:universities,code,'.$this->route('university'),
         ];
     }
 }

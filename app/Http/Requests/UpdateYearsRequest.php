@@ -24,7 +24,6 @@ class UpdateYearsRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'code' => 'required|string|unique:years,code,'.$this->route('year'),
             'faculty_id' => 'required|exists:faculties,id'
         ];
     }

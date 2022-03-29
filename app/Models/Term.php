@@ -16,6 +16,7 @@ class Term extends Model
 
         Term::observe(new \App\Observers\UserActionsObserver);
     }
+
     /**
      * Relations
      */
@@ -41,5 +42,19 @@ class Term extends Model
     {
         return $query->whereHas('definition', fn($q) => $q->where('automcquable', 1));
     }
+
+     /**
+     * Getters & Setters
+     */
+
+    public function setTitleAttribute($input)
+    {
+        $this->attributes['title'] = htmlentities($input);
+    }
+    public function getTitleAttribute($input)
+    {
+        return html_entity_decode($input);
+    }
+    
 
 }

@@ -24,6 +24,35 @@ class User extends Authenticatable implements JWTSubject /*, MustVerifyEmail*/{
         User::observe(new \App\Observers\UserActionsObserver);
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('latest', function ($builder) {
+            $builder->latest();
+        });
+    }
+     /**
+     * Getters & Setters
+     */
+
+    public function setUsernameAttribute($input)
+    {
+        $this->attributes['username'] = htmlentities($input);
+    }
+    public function getUsernameAttribute($input)
+    {
+        return html_entity_decode($input);
+    }
+    
+    public function setEmailAttribute($input)
+    {
+        $this->attributes['email'] = htmlentities($input);
+    }
+    public function getEmailAttribute($input)
+    {
+        return html_entity_decode($input);
+    }
+    
+
     /**
      * Hash password
      * @param $input

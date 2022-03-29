@@ -22,8 +22,28 @@ class Feedback extends Model
         Feedback::observe(new \App\Observers\UserActionsObserver);
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('latest', function ($builder) {
+            $builder->latest();
+        });
+    }
+
     public function user(){
         return $this->belongsTo(User::class);
     }
 
+     /**
+     * Getters & Setters
+     */
+
+    public function setContentAttribute($input)
+    {
+        $this->attributes['content'] = htmlentities($input);
+    }
+    public function getContentAttribute($input)
+    {
+        return html_entity_decode($input);
+    }
+    
 }

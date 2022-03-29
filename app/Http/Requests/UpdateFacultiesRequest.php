@@ -24,7 +24,6 @@ class UpdateFacultiesRequest extends FormRequest
     {
         return [
             'title' => 'required|string',
-            'code' => 'required|string|unique:faculties,code,'.$this->route('faculty'),
             'university_id' => 'required|exists:universities,id'
         ];
     }

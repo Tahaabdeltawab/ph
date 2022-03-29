@@ -17,7 +17,6 @@ class FacultyResource extends JsonResource
         $return = [
             "id" => $this->id,
             "title" => $this->title,
-            'code' => $this->code,
             'university_id' => $this->university_id,
             'university' => $this->university->title,
         ];

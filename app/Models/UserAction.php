@@ -27,6 +27,13 @@ class UserAction extends Model
         $this->attributes['user_id'] = $input ? $input : null;
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('latest', function ($builder) {
+            $builder->latest();
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

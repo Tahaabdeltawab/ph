@@ -21,6 +21,13 @@ class Topic extends Model
         Topic::observe(new \App\Observers\UserActionsObserver);
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('latest', function ($builder) {
+            $builder->latest();
+        });
+    }
+
     public function year()
     {
         return $this->belongsTo(Year::class);
@@ -52,4 +59,18 @@ class Topic extends Model
     public function scopePrivate($q){
         return $q->where('visibility', 0);
     }
+
+     /**
+     * Getters & Setters
+     */
+
+    public function setTitleAttribute($input)
+    {
+        $this->attributes['title'] = htmlentities($input);
+    }
+    public function getTitleAttribute($input)
+    {
+        return html_entity_decode($input);
+    }
+    
 }

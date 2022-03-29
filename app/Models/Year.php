@@ -12,13 +12,20 @@ use Illuminate\Database\Eloquent\Model;
 class Year extends Model
 {
 
-    protected $fillable = ['code', 'title', 'faculty_id'];
+    protected $fillable = ['title', 'faculty_id'];
 
     public static function boot()
     {
         parent::boot();
 
         Year::observe(new \App\Observers\UserActionsObserver);
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('latest', function ($builder) {
+            $builder->latest();
+        });
     }
 
     public function faculty()
@@ -30,4 +37,18 @@ class Year extends Model
     {
         return $this->hasMany(Topic::class);
     }
+
+     /**
+     * Getters & Setters
+     */
+
+    public function setTitleAttribute($input)
+    {
+        $this->attributes['title'] = htmlentities($input);
+    }
+    public function getTitleAttribute($input)
+    {
+        return html_entity_decode($input);
+    }
+    
 }

@@ -14,7 +14,6 @@ class CreateFacultiesTable extends Migration
     {
         Schema::create('faculties', function (Blueprint $table) {
             $table->id();
-            $table->string('code');
             $table->string('title');
             $table->foreignId('university_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();

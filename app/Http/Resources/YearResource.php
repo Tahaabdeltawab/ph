@@ -17,7 +17,6 @@ class YearResource extends JsonResource
         $return = [
             "id" => $this->id,
             "title" => $this->title,
-            'code' => $this->code,
             'faculty_id' => $this->faculty_id,
             'faculty' => $this->faculty->title,
         ];

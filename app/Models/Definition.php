@@ -8,7 +8,7 @@ class Definition extends Model
 {
     use Favoriteable, \Spatie\Tags\HasTags;
     
-    protected $fillable = ['title', 'topic_id', 'chapter_id', 'reversible', 'automcquable', 'custommcquable', 'explanation'];
+    protected $fillable = ['title', 'topic_id', 'chapter_id', 'flashable', 'reversible', 'mcquable', 'automcquable', 'custommcquable', 'completable', 'explanation'];
 
     public static function boot()
     {
@@ -21,11 +21,19 @@ class Definition extends Model
      * Getters & Setters
      */
 
+    public function setTitleAttribute($input)
+    {
+        $this->attributes['title'] = htmlentities($input);
+    }
+    public function getTitleAttribute($input)
+    {
+        return html_entity_decode($input);
+    }
+
     public function setExplanationAttribute($input)
     {
         $this->attributes['explanation'] = htmlentities($input);
     }
-
     public function getExplanationAttribute($input)
     {
         return html_entity_decode($input);
@@ -43,6 +51,21 @@ class Definition extends Model
      *      if (automcquable == 0) => flashcard only 
      *      if (automcquable == 1) => flashcard and mcq
      */
+    public function scopeFlashable($query)
+    {
+        // return $query->where('custommcquable', 0);
+        return $query->where('flashable', 1);
+    }
+    public function scopeMcquable($query)
+    {
+        // return $query->automcquable()->orWhere->custommcquable();
+        return $query->where('mcquable', 1);
+    }
+    public function scopeCompletable($query)
+    {
+        // return $query->onetermed(); //TODO add (or custommcquable) 
+        return $query->where('completable', 1); 
+    }
     public function scopeAutomcquable($query)
     {
         return $query->where('automcquable', 1);
@@ -51,21 +74,9 @@ class Definition extends Model
     {
         return $query->where('custommcquable', 1);
     }
-    public function scopeFlashable($query)
-    {
-        return $query->where('custommcquable', 0);
-    }
     public function scopeOnetermed($query)
     {
         return $query->withCount('terms')->having('terms_count', '=', 1);
-    }
-    public function scopeMcquable($query)
-    {
-        return $query->automcquable()->orWhere->custommcquable();
-    }
-    public function scopeCompletable($query)
-    {
-        return $query->onetermed(); //TODO add (or custommcquable) 
     }
 
 

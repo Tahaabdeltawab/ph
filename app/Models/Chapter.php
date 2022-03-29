@@ -24,6 +24,13 @@ class Chapter extends Model
         Chapter::observe(new \App\Observers\UserActionsObserver);
     }
 
+    protected static function booted()
+    {
+        static::addGlobalScope('latest', function ($builder) {
+            $builder->latest();
+        });
+    }
+    
     public function topic()
     {
         return $this->belongsTo(Topic::class);
@@ -50,4 +57,18 @@ class Chapter extends Model
     public function scopePrivate($q){
         return $q->whereHas('topic', fn($q) => $q->where('visibility', 0));
     }
+
+     /**
+     * Getters & Setters
+     */
+
+    public function setTitleAttribute($input)
+    {
+        $this->attributes['title'] = htmlentities($input);
+    }
+    public function getTitleAttribute($input)
+    {
+        return html_entity_decode($input);
+    }
+    
 }

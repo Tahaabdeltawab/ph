@@ -72,7 +72,7 @@ class OAuthController extends APIBaseController
             return $oauthProvider->user;
         }
 
-        // the facebook email may be null, so the second user with null email will oferride the first one, 
+        // the facebook email may be null, so the second user with null email will override the first one, 
         // so this check will not work in this case and will override the first user
         // if ($dbUser = User::where('email', $sUser->getEmail())->first())
 

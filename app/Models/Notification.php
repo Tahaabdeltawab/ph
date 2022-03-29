@@ -16,7 +16,7 @@ class Notification extends DatabaseNotification
 
     protected static function booted()
     {
-        static::addGlobalScope('latest', function (Builder $builder) {
+        static::addGlobalScope('latest', function ($builder) {
             $builder->latest();
         });
     }
