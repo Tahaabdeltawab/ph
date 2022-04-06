@@ -18,7 +18,7 @@ class ShareChapterNotification extends Notification
      */
     public function __construct($chapter)
     {
-        $this->title = auth()->user()->email.' has shared with you the topic: '.$chapter->topic->title.'. Chapter: '.$chapter->title;
+        $this->title = auth()->user()->username.' has shared with you the topic: '.$chapter->topic->title.'. Chapter: '.$chapter->title;
         $this->chapter = $chapter;
     }
 
@@ -51,10 +51,11 @@ class ShareChapterNotification extends Notification
     public function toDatabase($notifiable)
     {
         $return = [
-            'title'         => $this->title,
+            'title'          => $this->title,
+            'type'           => 'share_chapter',
             'chapter'        => $this->chapter,
-            'notifiable'    => $notifiable,
-            'sender'        => auth()->user(),
+            'notifiable'     => $notifiable,
+            'sender'         => auth()->user(),
         ];
         return $return;
     }
@@ -69,6 +70,7 @@ class ShareChapterNotification extends Notification
     {
         $return = [
             'title'         => $this->title,
+            'type'           => 'share_chapter',
             'chapter'        => $this->chapter,
             'notifiable'    => $notifiable,
             'sender'        => auth()->user(),

@@ -51,6 +51,7 @@ class CustomNotification extends Notification
     {
         $return = [
             'title'         => $this->title,
+            'type'          => 'custom',
             'notifiable'    => $notifiable,
             'sender'        => auth()->user(),
         ];
@@ -67,6 +68,7 @@ class CustomNotification extends Notification
     {
         $return = [
             'title'         => $this->title,
+            'type'          => 'custom',
             'notifiable'    => $notifiable,
             'sender'        => auth()->user(),
         ];

@@ -100,7 +100,7 @@ class ChaptersController extends APIBaseController
         // the reason for adding the coming line and compensating it with $created_topics is that for the topic to be retrieved, 
         // it should have a record in chapter_user table (have a shared chapter), so the user created topics without any chapters will not be retrieved.
         ->where('chapter_user.permission','!=', 'admin-show-update-create-delete')
-        ->select(['topics.id', 'topics.title', 'users.email'])
+        ->select(['topics.id', 'topics.title', 'users.username','users.avatar'])
         ->distinct()
         ->get();
 
