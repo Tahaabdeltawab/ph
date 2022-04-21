@@ -24,12 +24,12 @@ class Chapter extends Model
         Chapter::observe(new \App\Observers\UserActionsObserver);
     }
 
-    protected static function booted()
-    {
-        static::addGlobalScope('latest', function ($builder) {
-            $builder->latest();
-        });
-    }
+    // protected static function booted()
+    // {
+    //     static::addGlobalScope('latest', function ($builder) {
+    //         $builder->latest();
+    //     });
+    // }
     
     public function topic()
     {
