@@ -46,7 +46,11 @@ class DefinitionsController extends APIBaseController
                                  ->when($practiceMode == 'MCQ', fn($q) => $q->mcquable())
                                  ->when($practiceMode == 'Flashcard', fn($q) => $q->flashable())
                                  ->when($practiceMode == 'Complete', fn($q) => $q->completable())
+                                 ->select(Definition::$common)
                                  ->get();
+                                //  ->paginate(5);
+                                // return DefinitionResource::collection($definitions);
+                                 
         return $this->sendResponse(DefinitionResource::collection($definitions));
     }
 

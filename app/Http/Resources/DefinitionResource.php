@@ -19,26 +19,29 @@ class DefinitionResource extends JsonResource
         : $this->mcq_terms->prepend($this->term)->map(fn($term, $key) => ['label' => $term->title, 'value' => $term->id, 'color' => 'amber'])->shuffle();
         
         $return = [
+            // both
             "id" => $this->id,
-            "fav" => $this->hasBeenFavoritedBy(auth()->user()),
-            "level" => $this->user_level ? $this->user_level->level : 'unanswered',
             "title" => $this->title,
-            "explanation" => $this->explanation,
             "flashable" => $this->flashable,
             "reversible" => $this->reversible,
             "mcquable" => $this->mcquable,
             "custommcquable" => $this->custommcquable,
             "automcquable" => $this->automcquable,
             "completable" => $this->completable,
+            'terms_ids' => $this->terms->pluck('id'),
+            'terms' => $this->terms->pluck('title'),
+            "explanation" => $this->explanation,
+            // user
+            'mcq_terms' => $mcq_terms,
+            'term_id' => $this->term->id, // used to evaluate (mcq option & complete) is correct or not (in case the definition has only one term)
+            'term' => $this->term->title, // used to be saved in mcqResults (in case the definition has only one term). and to be shown in flashcard when custommcquable and flashable
+            "fav" => $this->hasBeenFavoritedBy(auth()->user()),
+            "level" => $this->user_level ? $this->user_level->level : 'unanswered',
+            // admin
             'topic_id' => $this->topic_id,
             'topic' => $this->topic->title,
             'chapter_id' => $this->chapter_id,
             'chapter' => $this->chapter->title,
-            'term_id' => $this->term->id, // used to evaluate (mcq option & complete) is correct or not (in case the definition has only one term)
-            'term' => $this->term->title, // used to be saved in mcqResults (in case the definition has only one term). and to be shown in flashcard when custommcquable and flashable
-            'terms_ids' => $this->terms->pluck('id'),
-            'terms' => $this->terms->pluck('title'),
-            'mcq_terms' => $mcq_terms,
             'tags' => collect($this->tags)->pluck('name', 'id'),
         ];
         return $return;

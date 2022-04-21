@@ -9,6 +9,8 @@ class Definition extends Model
     use Favoriteable, \Spatie\Tags\HasTags;
     
     protected $fillable = ['title', 'topic_id', 'chapter_id', 'flashable', 'reversible', 'mcquable', 'automcquable', 'custommcquable', 'completable', 'explanation'];
+    
+    public static $common = ['definitions.id','definitions.title', 'definitions.flashable', 'definitions.reversible', 'definitions.mcquable', 'definitions.custommcquable', 'definitions.custommcquable', 'definitions.automcquable', 'definitions.completable', 'definitions.topic_id', 'definitions.chapter_id', 'definitions.explanation'];
 
     public static function boot()
     {
@@ -42,28 +44,17 @@ class Definition extends Model
     /**
      * Scopes
     */
-    /**
-     * don't make flashable def with multi terms => automcquable
-     * the definition may be viewed as flashcard or mcq or complete
-     * if (definition has one term) the definition will be viewed as complete
-     * if (custommcquable == 1) => so the definition will be viewed as mcq only 
-     * elseif (custommcquable == 0) => flashable() => the definition will be viewed as 👇
-     *      if (automcquable == 0) => flashcard only 
-     *      if (automcquable == 1) => flashcard and mcq
-     */
+  
     public function scopeFlashable($query)
     {
-        // return $query->where('custommcquable', 0);
         return $query->where('flashable', 1);
     }
     public function scopeMcquable($query)
     {
-        // return $query->automcquable()->orWhere->custommcquable();
         return $query->where('mcquable', 1);
     }
     public function scopeCompletable($query)
     {
-        // return $query->onetermed(); //TODO add (or custommcquable) 
         return $query->where('completable', 1); 
     }
     public function scopeAutomcquable($query)
